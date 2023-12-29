@@ -14,4 +14,13 @@ public enum ErrorCode {
        ErrorCode(String description) {
               this.description = description;
        }
+
+       public static ErrorCode fromString(String code) {
+              for (ErrorCode errorCode : ErrorCode.values()) {
+                     if (errorCode.name().equalsIgnoreCase(code)) {
+                            return errorCode;
+                     }
+              }
+              throw new IllegalArgumentException("No constant with the specified code: " + code);
+       }
 }
