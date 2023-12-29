@@ -59,6 +59,11 @@ public class ErrorCodeController {
         model.addAttribute("selectedError", error);
 
         // Fetch details and solutions for the selected error
+        // get the error from string
+        // find the description of it - just from it's class
+        // then read the possible solutions from the config file too?
+
+
         // You can use a similar approach as before to read from YAML and populate the model attributes
 
         return "selected-error";
