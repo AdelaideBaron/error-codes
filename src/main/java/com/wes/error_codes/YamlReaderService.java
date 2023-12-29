@@ -72,7 +72,7 @@ public class YamlReaderService {
 
 
 
-    @Value("classpath:errors-causes.yml") // Assuming you've renamed your YAML file
+    @Value("classpath:error-causes.yml") // Assuming you've renamed your YAML file
     private Resource errorsConfigResource;
 
     public List<String> readErrorsFromYaml() {

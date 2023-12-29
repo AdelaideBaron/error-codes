@@ -58,6 +58,8 @@ public class ErrorCodeController {
         model.addAttribute("selectedMachine", machine);
         model.addAttribute("selectedError", error);
 
+        log.info(String.valueOf(yamlReaderService.findCausesByError(error)));
+
         // Fetch details and solutions for the selected error
         // get the error from string
         // find the description of it - just from it's class
