@@ -94,7 +94,17 @@ public class YamlReaderService {
         }
     }
 
-    public List<String> findCausesByError(String errorCode) {
+    public List<Cause> findCausesByError(List<String> causes){
+        List<Cause> causesToReturn = new ArrayList<>();
+
+        for(String cause : causes){
+            causesToReturn.add(Cause.fromString(cause));
+        }
+
+        return causesToReturn;
+    }
+
+    public List<String> getCauseByErrorFromConfig(String errorCode) {
         try (InputStream inputStream = errorsConfigResource.getInputStream()) {
             Yaml yaml = new Yaml();
             Map<String, List<Map<String, Object>>> yamlData = yaml.load(inputStream);

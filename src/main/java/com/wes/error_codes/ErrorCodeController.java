@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 // Add this import statement
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,7 +57,8 @@ public class ErrorCodeController {
         model.addAttribute("selectedMachine", machine);
         model.addAttribute("selectedError", error);
 
-        log.info(String.valueOf(yamlReaderService.findCausesByError(error)));
+        List<String> causes = yamlReaderService.getCauseByErrorFromConfig(error);
+        log.info(String.valueOf(yamlReaderService.findCausesByError(causes)));
 
         // Fetch details and solutions for the selected error
         // get the error from string
