@@ -21,8 +21,12 @@
 <!-- Display causes and potential solutions for the selected error -->
 <h2>Causes & Potential Solutions</h2>
 <ul>
-    <li th:each="detail, index : ${causeDetails}">
-        <p th:text="${'Cause ' + (index.index + 1) + ': ' + detail}"></p>
+    <li th:each="cause, index : ${causeDetails}">
+        <p>
+            <span th:text="${'CAUSE: ' + cause.description}"></span><br/>
+            <span th:text="${'  - description: ' + cause.description}"></span><br/>
+            <span th:text="${'  - solution: ' + cause.solution}"></span>
+        </p>
     </li>
 </ul>
 
