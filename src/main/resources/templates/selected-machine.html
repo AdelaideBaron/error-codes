@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Selected Machine</title>
+</head>
+<body>
+<h1>Selected Machine</h1>
+<p>Selected machine: <span th:text="${selectedMachine}"></span></p>
+<p>Error Codes:</p>
+<ul>
+    <li th:each="errorCode : ${errorCodes}" th:text="${errorCode}"></li>
+</ul>
+<!-- Add any additional content as needed -->
+</body>
+</html>
