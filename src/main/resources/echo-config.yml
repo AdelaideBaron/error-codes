@@ -8,3 +8,5 @@ echo:
       - "ERROR_ABC"
       - "ERROR_DEF"
   # Add more machines as needed
+
+#want to combine this & error-causes config eventually...

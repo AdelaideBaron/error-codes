@@ -61,11 +61,59 @@ public class YamlReaderService {
         }
     }
 
+
     private List<ErrorCode> convertToErrorCodeEnum(List<String> errorCodes) {
         List<ErrorCode> result = new ArrayList<>();
         for (String code : errorCodes) {
             result.add(ErrorCode.valueOf(code));
         }
         return result;
+    }
+
+
+
+    @Value("classpath:errors-causes.yml") // Assuming you've renamed your YAML file
+    private Resource errorsConfigResource;
+
+    public List<String> readErrorsFromYaml() {
+        try (InputStream inputStream = errorsConfigResource.getInputStream()) {
+            Yaml yaml = new Yaml();
+            Map<String, List<Map<String, Object>>> yamlData = yaml.load(inputStream);
+
+            List<String> errors = new ArrayList<>();
+            if (yamlData != null && yamlData.containsKey("errors")) {
+                yamlData.get("errors").forEach(entry -> {
+                    if (entry.containsKey("code")) {
+                        errors.add((String) entry.get("code"));
+                    }
+                });
+            }
+            return errors;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read errors from YAML file", e);
+        }
+    }
+
+    public List<String> findCausesByError(String errorCode) {
+        try (InputStream inputStream = errorsConfigResource.getInputStream()) {
+            Yaml yaml = new Yaml();
+            Map<String, List<Map<String, Object>>> yamlData = yaml.load(inputStream);
+
+            List<String> causes = new ArrayList<>();
+            if (yamlData != null && yamlData.containsKey("errors")) {
+                yamlData.get("errors").forEach(entry -> {
+                    if (entry.containsKey("code") && entry.containsKey("causes")) {
+                        String currentCode = (String) entry.get("code");
+                        if (errorCode.equals(currentCode)) {
+                            List<String> currentCauses = (List<String>) entry.get("causes");
+                            causes.addAll(currentCauses);
+                        }
+                    }
+                });
+            }
+            return causes;
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to find causes from YAML file", e);
+        }
     }
 }
