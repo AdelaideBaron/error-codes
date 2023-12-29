@@ -57,18 +57,29 @@ public class ErrorCodeController {
         model.addAttribute("selectedMachine", machine);
         model.addAttribute("selectedError", error);
 
+
+
         List<String> causes = yamlReaderService.getCauseByErrorFromConfig(error);
-        log.info(String.valueOf(yamlReaderService.findCausesByError(causes)));
+        log.info("Causes for {}: {}", error, causes);
 
         // Fetch details and solutions for the selected error
-        // get the error from string
-        // find the description of it - just from it's class
-        // then read the possible solutions from the config file too?
+        List<Cause> causeDetails = yamlReaderService.findCausesByError(causes);
 
+        // Populate the model with cause descriptions and solutions
+        List<String> causeDescriptions = causeDetails.stream()
+                .map(Cause::getDescription)
+                .collect(Collectors.toList());
 
-        // You can use a similar approach as before to read from YAML and populate the model attributes
+        List<String> causeSolutions = causeDetails.stream()
+                .map(Cause::getSolution)
+                .collect(Collectors.toList());
+
+        model.addAttribute("errorDetails", ErrorCode.fromString(error).getDescription());
+        model.addAttribute("causeDetails", causeDescriptions);
+//        model.addAttribute("errorSolutions", causeSolutions);
 
         return "selected-error";
     }
+
 
 }
