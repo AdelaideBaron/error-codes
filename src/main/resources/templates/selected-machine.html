@@ -1,3 +1,4 @@
+<!-- src/main/resources/templates/selected-machine.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -5,12 +6,17 @@
     <title>Selected Machine</title>
 </head>
 <body>
-<h1>Selected Machine</h1>
+<h1>Machine Details</h1>
 <p>Selected machine: <span th:text="${selectedMachine}"></span></p>
-<p>Error Codes:</p>
+
+<!-- Display a list of errors for the selected machine -->
 <ul>
-    <li th:each="errorCode : ${errorCodes}" th:text="${errorCode}"></li>
+    <li th:each="error : ${errors}">
+        <a th:href="@{/select-error(machine=${selectedMachine},error=${error})}" th:text="${error}"></a>
+    </li>
 </ul>
-<!-- Add any additional content as needed -->
+
+<!-- Link to navigate back to the previous page -->
+<p><a th:href="@{/hello}">Back to Machine Selection</a></p>
 </body>
 </html>
