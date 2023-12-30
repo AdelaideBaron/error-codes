@@ -4,19 +4,55 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Selected Machine</title>
+    <style>
+        #errorList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .errorItem {
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
 <h1>Machine Details</h1>
 <p>Selected machine: <span th:text="${selectedMachine}"></span></p>
 
+<!-- Add a search box for error codes -->
+<label for="searchBox">Search Error Codes:</label>
+<input type="text" id="searchBox" oninput="searchErrors()">
+
 <!-- Display a list of errors for the selected machine -->
-<ul>
-    <li th:each="error : ${errors}">
+<ul id="errorList">
+    <li th:each="error : ${errors}" class="errorItem">
         <a th:href="@{/select-error(machine=${selectedMachine},error=${error})}" th:text="${error}"></a>
     </li>
 </ul>
 
 <!-- Link to navigate back to the previous page -->
 <p><a th:href="@{/hello}">Back to Machine Selection</a></p>
+
+<script>
+    const errorList = document.getElementById("errorList");
+    const errorItems = document.getElementsByClassName("errorItem");
+
+    function searchErrors() {
+        const searchInput = document.getElementById("searchBox").value.toLowerCase();
+
+        Array.from(errorItems).forEach(item => {
+            const errorText = item.textContent.toLowerCase();
+            if (errorText.includes(searchInput)) {
+                item.style.display = "block";
+            } else {
+                item.style.display = "none";
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
