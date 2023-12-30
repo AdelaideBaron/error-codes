@@ -1,10 +1,73 @@
 <!-- src/main/resources/templates/selected-error.html -->
+<!-- Add the same style section as in hello.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title>Error</title>
+    <!-- ... existing head content ... -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        ul {
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+
+@media only screen and (max-width: 600px) {
+        body {
+            font-size: 14px; /* You can adjust this value as needed */
+        }
+
+        header,
+        h1,
+        label,
+        input[type="text"],
+        .errorItem {
+            font-size: 1.5em; /* You can adjust this value as needed */
+        }
+
+        main {
+            padding: 10px;
+        }
+    }
+
+    </style>
 </head>
+
+
 <body>
 <h1>Error</h1>
 <p>Selected machine: <span th:text="${selectedMachine}"></span></p>
@@ -30,7 +93,7 @@
     </li>
 </ul>
 
-<!-- Link to navigate back to the selected machine page -->
-<p><a th:href="@{/select-machine?machine=${selectedMachine}}">Back to Selected Machine</a></p>
+<!-- Link to navigate back to the previous page -->
+<p><a th:href="@{/hello}">Back to Home</a></p>
 </body>
 </html>

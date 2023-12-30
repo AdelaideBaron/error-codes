@@ -1,22 +1,88 @@
-<!-- src/main/resources/templates/hello.html -->
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error Code Filter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            padding: 10px;
+            color: white;
+            font-size: 1.5em;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+       @media only screen and (max-width: 600px) {
+        header {
+            font-size: 1.2em;
+        }
+
+        main {
+            padding: 10px;
+        }
+
+        select {
+            font-size: 1.2em;
+        }
+
+        input[type="submit"] {
+            font-size: 1.2em;
+        }
+    }
+
+    </style>
 </head>
 <body>
-<h1>Hi Wes!</h1>
-<p>Welcome to the error code filter.</p>
 
-<form action="/select-machine" method="post">
-    <label for="machine">Please select your machine:</label>
-    <select name="machine" id="machine">
-        <!-- Thymeleaf syntax to iterate over a list of machines -->
-        <option th:each="machine : ${machines}" th:value="${machine}" th:text="${machine}"></option>
-    </select>
-    <br/>
-    <input type="submit" value="Proceed"/>
-</form>
+<header>
+    <h1>Error Code Filter</h1>
+</header>
+
+<main>
+    <p>Welcome to the error code filter.</p>
+
+    <form action="/select-machine" method="post">
+        <label for="machine">Please select your machine:</label>
+        <select name="machine" id="machine">
+            <!-- Thymeleaf syntax to iterate over a list of machines -->
+            <option th:each="machine : ${machines}" th:value="${machine}" th:text="${machine}"></option>
+        </select>
+        <br/>
+        <input type="submit" value="Proceed"/>
+    </form>
+</main>
+
 </body>
 </html>
