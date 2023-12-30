@@ -1,0 +1,16 @@
+errors:
+  - code: "ERROR_ABC"
+    causes:
+      - "CAUSE_1"
+      - "CAUSE_2"
+      - "CAUSE_3"
+  - code: "ERROR_XYZ"
+    causes:
+      - "CAUSE_4"
+      - "CAUSE_5"
+  - code: "ERROR_DEF"
+    causes:
+      - "CAUSE_1"
+      - "CAUSE_3"
+      - "CAUSE_5"
+# Add more errors and causes as needed

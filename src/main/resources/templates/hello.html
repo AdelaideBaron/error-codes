@@ -1,0 +1,22 @@
+<!-- src/main/resources/templates/hello.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Error Code Filter</title>
+</head>
+<body>
+<h1>Hi Wes!</h1>
+<p>Welcome to the error code filter.</p>
+
+<form action="/select-machine" method="post">
+    <label for="machine">Please select your machine:</label>
+    <select name="machine" id="machine">
+        <!-- Thymeleaf syntax to iterate over a list of machines -->
+        <option th:each="machine : ${machines}" th:value="${machine}" th:text="${machine}"></option>
+    </select>
+    <br/>
+    <input type="submit" value="Proceed"/>
+</form>
+</body>
+</html>

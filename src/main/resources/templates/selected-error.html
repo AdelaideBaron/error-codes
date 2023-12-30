@@ -1,0 +1,36 @@
+<!-- src/main/resources/templates/selected-error.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Error</title>
+</head>
+<body>
+<h1>Error</h1>
+<p>Selected machine: <span th:text="${selectedMachine}"></span></p>
+<p>Selected error: <span th:text="${selectedError}"></span></p>
+
+<!-- Display details for the selected error -->
+<h2>Details</h2>
+<ul>
+    <li th:each="detail : ${errorDetails}">
+        <p th:text="${detail}"></p>
+    </li>
+</ul>
+
+<!-- Display causes and potential solutions for the selected error -->
+<h2>Causes & Potential Solutions</h2>
+<ul>
+    <li th:each="cause, index : ${causeDetails}">
+        <p>
+            <span th:text="${'CAUSE: ' + cause.description}"></span><br/>
+            <span th:text="${'  - description: ' + cause.description}"></span><br/>
+            <span th:text="${'  - solution: ' + cause.solution}"></span>
+        </p>
+    </li>
+</ul>
+
+<!-- Link to navigate back to the selected machine page -->
+<p><a th:href="@{/select-machine?machine=${selectedMachine}}">Back to Selected Machine</a></p>
+</body>
+</html>

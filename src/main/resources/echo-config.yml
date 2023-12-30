@@ -1,0 +1,12 @@
+echo:
+  - machine: "520"
+    errorCodes:
+      - "ERROR_ABC"
+      - "ERROR_XYZ"
+  - machine: "550"
+    errorCodes:
+      - "ERROR_ABC"
+      - "ERROR_DEF"
+  # Add more machines as needed
+
+#want to combine this & error-causes config eventually...
