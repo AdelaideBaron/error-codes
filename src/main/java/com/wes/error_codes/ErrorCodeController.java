@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-// Add this import statement
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +18,8 @@ public class ErrorCodeController {
 
     @Autowired
     private YamlReaderService yamlReaderService;
+    @Autowired
+    private CauseHandler causeHandler;
 
     @GetMapping("/hello")
     public String hello(Model model) {
@@ -27,15 +28,6 @@ public class ErrorCodeController {
         return "hello";
     }
 
-//    @PostMapping("/select-machine")
-//    public String selectMachine(@RequestParam String machine, Model model) {
-//        List<ErrorCode> errorCodes = yamlReaderService.readErrorCodesFromYaml(machine);
-//        model.addAttribute("selectedMachine", machine);
-//        model.addAttribute("errorCodes", errorCodes);
-//        return "selected-machine";
-//    }
-
-    // Update the selectMachine method in ErrorCodeController
     @PostMapping("/select-machine")
     public String selectMachine(@RequestParam String machine, Model model) {
         model.addAttribute("selectedMachine", machine);
@@ -51,7 +43,6 @@ public class ErrorCodeController {
         return "selected-machine";
     }
 
-    // Add a new method to handle selecting an error
     @GetMapping("/select-error")
     public String selectError(@RequestParam String machine, @RequestParam String error, Model model) {
         model.addAttribute("selectedMachine", machine);
@@ -60,15 +51,11 @@ public class ErrorCodeController {
         List<String> causes = yamlReaderService.getCauseByErrorFromConfig(error);
         log.info("Causes for {}: {}", error, causes);
 
-        // Fetch details and solutions for the selected error
-        List<Cause> causeDetails = yamlReaderService.findCausesByError(causes);
+        List<Cause> causeDetails = causeHandler.findCausesByError(causes);
 
         model.addAttribute("errorDetails", ErrorCode.fromString(error).getDescription());
         model.addAttribute("causeDetails", causeDetails);
 
         return "selected-error";
     }
-
-
-
 }
