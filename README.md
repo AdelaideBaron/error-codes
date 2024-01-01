@@ -23,3 +23,6 @@
 - `/hello` 
 - `/select-machine` 
 - `/select-error` 
+
+# Adding errors, machines, causes, and solutions 
+- In general, 
