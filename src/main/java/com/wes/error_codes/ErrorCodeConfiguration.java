@@ -1,0 +1,72 @@
+package com.wes.error_codes;
+
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import com.wes.error_codes.errors.Error;
+import com.wes.error_codes.errors.PossibleCause;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+@Configuration
+@Slf4j
+public class ErrorCodeConfiguration {
+    private String ERROR_CODES_FILE_PATH = "src/main/resources/data/error_codes.csv";
+
+    public static List<Error> errors;
+
+    public List<Error> getErrors(){
+        return readErrors();
+    }
+
+    @Bean
+    public List<Error> readErrors(){
+        List<Error> errors = new ArrayList<>(); // Define errors list here
+        List<List<String>> records = new ArrayList<List<String>>();
+        try (CSVReader csvReader = new CSVReader(new FileReader(ERROR_CODES_FILE_PATH));) {
+            String[] row = null;
+            StringBuffer errorCode = new StringBuffer("");
+            List<PossibleCause> possibleCauseList = new ArrayList<>();
+            boolean firstLine = true;
+            while ((row = csvReader.readNext()) != null) {
+                if(firstLine){
+                    firstLine = false;
+                } else {
+                    if(row[0] != ""){
+                        log.info("reading new error: " + row[0]);
+                        errorCode.append(row[0]);
+                        possibleCauseList.add(new PossibleCause(row[1]));
+                    } else if(row[0] == "" && row[1] != "" ){
+                        possibleCauseList.add(new PossibleCause(row[1]));
+                    } else if(row[0] == "" && row[1] == ""){
+                        log.debug("creating error...");
+                        for(PossibleCause cause : possibleCauseList){
+                            log.info(cause.getCause());
+                        }
+                        errors.add(new Error(errorCode.toString(), possibleCauseList));
+                        log.debug("Clearing building error: " + errorCode);
+                        errorCode.replace(0,errorCode.length(), "");
+                        possibleCauseList.clear();
+                        log.debug("error cleared: " + errorCode + " possible causes cleared: " +possibleCauseList);
+                    }
+                }
+            }
+            log.debug("creating error..."); // last one to be created after reading complete
+            for(PossibleCause cause : possibleCauseList){
+                log.info(cause.getCause());
+            }
+            errorCode.replace(0,errorCode.length(), "");
+            possibleCauseList.clear();
+            errors.add(new Error(errorCode.toString(), possibleCauseList));
+
+        } catch (IOException | CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+        return errors;
+    }
+}
