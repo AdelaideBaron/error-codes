@@ -18,8 +18,6 @@ import java.util.List;
 public class ErrorCodeConfiguration {
     private String ERROR_CODES_FILE_PATH = "src/main/resources/data/error_codes.csv";
 
-    public static List<Error> errors;
-
     public List<Error> getErrors(){
         return readErrors();
     }
