@@ -11,3 +11,4 @@ Navigate to error-codes/src/main/resources/data
 
 // Todo do it per machine... 
 // will need something in the pipeline to ensure that number of machines = number of csvs 
+// will need some sort of unique check in the column 0?
