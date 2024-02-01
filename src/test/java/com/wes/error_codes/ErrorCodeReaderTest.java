@@ -1,6 +1,7 @@
 package com.wes.error_codes;
 
 import com.wes.error_codes.model.Error;
+import com.wes.error_codes.model.Machine;
 import com.wes.error_codes.model.PossibleCause;
 import com.wes.error_codes.reader.ErrorCodeReader;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,7 @@ public class ErrorCodeReaderTest {
         errorCodeReader = new ErrorCodeReader();
         ReflectionTestUtils.setField(errorCodeReader, "ERROR_CODES_FILE_PATH", TEST_ERROR_CODES_FILE_PATH);
         errorsFromCsv = errorCodeReader.getErrors();
+        errorCodeReader.readErrorsForAllMachines();
     }
 
     @Test
@@ -64,5 +66,12 @@ public class ErrorCodeReaderTest {
     void errorCodeConfigSetsErrorsFromCsv() {
         assertEquals(3,ErrorCodeReader.errorsFromCSV.size());
     }
+
+    @Test
+    @DisplayName("Reads each machine's config")
+    void readsEachMachineSConfig() {
+        assertEquals(Machine.values().length, errorCodeReader.machineErrors.size());
+    }
+
 
 }
