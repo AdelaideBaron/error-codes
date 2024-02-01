@@ -7,13 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Controller
+@RestController
 public class ErrorCodeController {
 
     @Autowired
@@ -23,9 +24,10 @@ public class ErrorCodeController {
 
     @GetMapping("/hello")
     public String hello(Model model) {
+        log.info("Homepage accessed");
         List<String> machines = yamlReaderService.readMachinesFromYaml();
         model.addAttribute("machines", machines);
-        return "hello";
+        return "hello"; // to be removed
     }
 
     @PostMapping("/select-machine")
@@ -33,6 +35,12 @@ public class ErrorCodeController {
         model.addAttribute("selectedMachine", machine);
 
         // Fetch the list of errors for the selected machine
+
+        // get the errors from ErrorCodeConfiguration, then display the error.getErrorCode for each
+        // for error in ErrorCodeConfig.getErrors():
+        // add their names (.getName) to a list
+
+        // old way below
         List<String> errors = yamlReaderService.readErrorCodesFromYaml(machine)
                 .stream()
                 .map(ErrorCode::name)
