@@ -41,16 +41,16 @@ public class ErrorCodeReader { // obvs rename
                     firstLine = false;
                 } else {
                     if(row[0] != ""){
-                        log.info("reading new error: " + row[0]);
-                        errorCode.append(row[0]);
+                        log.debug("reading new error: " + row[0]);
+                        errorCode.append(row[0].replace(" ", ""));
                         possibleCauseList.add(new PossibleCause(row[1]));
                     } else if(row[0] == "" && row[1] != "" ){
                         possibleCauseList.add(new PossibleCause(row[1]));
                     } else if(row[0] == "" && row[1] == ""){
                         log.debug("creating error...");
-                        for(PossibleCause cause : possibleCauseList){
-                            log.info(cause.getCause());
-                        }
+//                        for(PossibleCause cause : possibleCauseList){
+//                            log.info(cause.getCause());
+//                        }
                         errors.add(new Error(errorCode.toString(), possibleCauseList));
                         log.debug("Clearing building error: " + errorCode);
                         errorCode.replace(0,errorCode.length(), "");
