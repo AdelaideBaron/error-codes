@@ -31,15 +31,22 @@ public class ErrorCodeReader { // obvs rename
     public static Map<Machine, List<Error>> machineErrors = new HashMap<>();
 
     @Bean
-    public void readErrorsForAllMachines(){
+    public Map<Machine, List<Error>> readErrorsForAllMachines(){
         for(Machine machine : Machine.values()){
+//            System.out.println("machine: " + machine);
             machineErrors.put(machine, readErrors(machine.getFilePath()));
+//            List<Error> errors = readErrors(machine.getFilePath());
+//            for (Error error : errors){
+//                System.out.println("error code: " + error.getErrorCode());
+//                for(PossibleCause possibleCause : error.getPossibleCauses()){
+//                    System.out.println("possib cause: " + possibleCause.getCause());
+//                }
+//            }
         }
+        return null;
     }
-
-    public List<Error> readErrors(String filePath){ // refactor, can be void
-        List<Error> errors = new ArrayList<>(); // Define errors list here
-        List<List<String>> records = new ArrayList<List<String>>();
+    public List<Error> readErrors(String filePath){
+        List<Error> errors = new ArrayList<>();
         try (CSVReader csvReader = new CSVReader(new FileReader(filePath));) {
             String[] row = null;
             StringBuffer errorCode = new StringBuffer("");
@@ -49,19 +56,21 @@ public class ErrorCodeReader { // obvs rename
                 if(firstLine){
                     firstLine = false;
                 } else {
-                    if(row[0] != ""){
+                    if(!row[0].isEmpty()){
                         errorCode.append(row[0].replace(" ", ""));
                         possibleCauseList.add(new PossibleCause(row[1]));
-                    } else if(row[0] == "" && row[1] != "" ){
+                    } else if(row[0].isEmpty() && !row[1].isEmpty()){
                         possibleCauseList.add(new PossibleCause(row[1]));
-                    } else if(row[0] == "" && row[1] == ""){
-                        errors.add(new Error(errorCode.toString(), possibleCauseList));
-                        errorCode.replace(0,errorCode.length(), "");
+                    } else if(row[0].isEmpty() && row[1].isEmpty()){
+                        errors.add(new Error(errorCode.toString(), new ArrayList<>(possibleCauseList)));
+                        errorCode.setLength(0);
                         possibleCauseList.clear();
                     }
                 }
             }
-            errors.add(new Error(errorCode.toString(), possibleCauseList));
+            if(errorCode.length() > 0){
+                errors.add(new Error(errorCode.toString(), new ArrayList<>(possibleCauseList)));
+            }
 
         } catch (IOException | CsvValidationException e) {
             throw new RuntimeException(e);
@@ -69,6 +78,40 @@ public class ErrorCodeReader { // obvs rename
         errorsFromCSV = errors;
         return errors;
     }
+
+
+//    public List<Error> readErrors(String filePath){ // refactor, can be void
+//        List<Error> errors = new ArrayList<>(); // Define errors list here
+//        List<List<String>> records = new ArrayList<List<String>>();
+//        try (CSVReader csvReader = new CSVReader(new FileReader(filePath));) {
+//            String[] row = null;
+//            StringBuffer errorCode = new StringBuffer("");
+//            List<PossibleCause> possibleCauseList = new ArrayList<>();
+//            boolean firstLine = true;
+//            while ((row = csvReader.readNext()) != null) {
+//                if(firstLine){
+//                    firstLine = false;
+//                } else {
+//                    if(row[0] != ""){
+//                        errorCode.append(row[0].replace(" ", ""));
+//                        possibleCauseList.add(new PossibleCause(row[1]));
+//                    } else if(row[0] == "" && row[1] != "" ){
+//                        possibleCauseList.add(new PossibleCause(row[1]));
+//                    } else if(row[0] == "" && row[1] == ""){
+//                        errors.add(new Error(errorCode.toString(), possibleCauseList));
+//                        errorCode.replace(0,errorCode.length(), "");
+//                        possibleCauseList.clear();
+//                    }
+//                }
+//            }
+//            errors.add(new Error(errorCode.toString(), possibleCauseList));
+//
+//        } catch (IOException | CsvValidationException e) {
+//            throw new RuntimeException(e);
+//        }
+//        errorsFromCSV = errors;
+//        return errors;
+//    }
 
 
 
