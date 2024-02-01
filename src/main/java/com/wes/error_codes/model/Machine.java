@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum Machine {
-    MACHINE_1("data/machine_1_error_codes.csv"),
-    MACHINE_2("data/machine_2_error_codes.csv");
+    MACHINE_1("src/main/resources/data/machine_1_error_codes.csv"),
+    MACHINE_2("src/main/resources/data/machine_2_error_code.csv");
 
     private final String filePath;
 }
