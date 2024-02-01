@@ -1,9 +1,9 @@
-package com.wes.error_codes;
+package com.wes.error_codes.reader;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
-import com.wes.error_codes.errors.Error;
-import com.wes.error_codes.errors.PossibleCause;
+import com.wes.error_codes.model.Error;
+import com.wes.error_codes.model.PossibleCause;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,10 +21,14 @@ public class ErrorCodeReader { // obvs rename
 
     public List<Error> getErrors(){
         return readErrors();
-    }
+    } // Todo can disable use of this, only used within tests so cleanup needed
 
+    public static List<Error> errorsFromCSV;
+
+
+    // Todo refactor the below
     @Bean
-    public List<Error> readErrors(){
+    public List<Error> readErrors(){ // refactor, can be void
         List<Error> errors = new ArrayList<>(); // Define errors list here
         List<List<String>> records = new ArrayList<List<String>>();
         try (CSVReader csvReader = new CSVReader(new FileReader(ERROR_CODES_FILE_PATH));) {
@@ -56,16 +60,17 @@ public class ErrorCodeReader { // obvs rename
                 }
             }
             log.debug("creating error..."); // last one to be created after reading complete
-            for(PossibleCause cause : possibleCauseList){
-                log.info(cause.getCause());
-            }
-            errorCode.replace(0,errorCode.length(), "");
-            possibleCauseList.clear();
+//            for(PossibleCause cause : possibleCauseList){
+//                log.info(cause.getCause());
+//            }
+//            errorCode.replace(0,errorCode.length(), "");
+//            possibleCauseList.clear(); // hm is this it?
             errors.add(new Error(errorCode.toString(), possibleCauseList));
 
         } catch (IOException | CsvValidationException e) {
             throw new RuntimeException(e);
         }
+        errorsFromCSV = errors;
         return errors;
     }
 }
