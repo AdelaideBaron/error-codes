@@ -33,15 +33,7 @@ public class ErrorCodeReader { // obvs rename
     @Bean
     public Map<Machine, List<Error>> readErrorsForAllMachines(){
         for(Machine machine : Machine.values()){
-//            System.out.println("machine: " + machine);
             machineErrors.put(machine, readErrors(machine.getFilePath()));
-//            List<Error> errors = readErrors(machine.getFilePath());
-//            for (Error error : errors){
-//                System.out.println("error code: " + error.getErrorCode());
-//                for(PossibleCause possibleCause : error.getPossibleCauses()){
-//                    System.out.println("possib cause: " + possibleCause.getCause());
-//                }
-//            }
         }
         return null;
     }
@@ -79,42 +71,6 @@ public class ErrorCodeReader { // obvs rename
         return errors;
     }
 
-
-//    public List<Error> readErrors(String filePath){ // refactor, can be void
-//        List<Error> errors = new ArrayList<>(); // Define errors list here
-//        List<List<String>> records = new ArrayList<List<String>>();
-//        try (CSVReader csvReader = new CSVReader(new FileReader(filePath));) {
-//            String[] row = null;
-//            StringBuffer errorCode = new StringBuffer("");
-//            List<PossibleCause> possibleCauseList = new ArrayList<>();
-//            boolean firstLine = true;
-//            while ((row = csvReader.readNext()) != null) {
-//                if(firstLine){
-//                    firstLine = false;
-//                } else {
-//                    if(row[0] != ""){
-//                        errorCode.append(row[0].replace(" ", ""));
-//                        possibleCauseList.add(new PossibleCause(row[1]));
-//                    } else if(row[0] == "" && row[1] != "" ){
-//                        possibleCauseList.add(new PossibleCause(row[1]));
-//                    } else if(row[0] == "" && row[1] == ""){
-//                        errors.add(new Error(errorCode.toString(), possibleCauseList));
-//                        errorCode.replace(0,errorCode.length(), "");
-//                        possibleCauseList.clear();
-//                    }
-//                }
-//            }
-//            errors.add(new Error(errorCode.toString(), possibleCauseList));
-//
-//        } catch (IOException | CsvValidationException e) {
-//            throw new RuntimeException(e);
-//        }
-//        errorsFromCSV = errors;
-//        return errors;
-//    }
-
-
-
     // Todo refactor the below
     @Bean
     public List<Error> readErrors(){ // refactor, can be void
@@ -137,9 +93,6 @@ public class ErrorCodeReader { // obvs rename
                         possibleCauseList.add(new PossibleCause(row[1]));
                     } else if(row[0] == "" && row[1] == ""){
                         log.debug("creating error...");
-//                        for(PossibleCause cause : possibleCauseList){
-//                            log.info(cause.getCause());
-//                        }
                         errors.add(new Error(errorCode.toString(), possibleCauseList));
                         log.debug("Clearing building error: " + errorCode);
                         errorCode.replace(0,errorCode.length(), "");
@@ -149,11 +102,6 @@ public class ErrorCodeReader { // obvs rename
                 }
             }
             log.debug("creating error..."); // last one to be created after reading complete
-//            for(PossibleCause cause : possibleCauseList){
-//                log.info(cause.getCause());
-//            }
-//            errorCode.replace(0,errorCode.length(), "");
-//            possibleCauseList.clear(); // hm is this it?
             errors.add(new Error(errorCode.toString(), possibleCauseList));
 
         } catch (IOException | CsvValidationException e) {

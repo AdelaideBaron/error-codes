@@ -93,22 +93,6 @@ public class ErrorCodeReaderTest {
         assertEquals(expected, actual, "Machine checked %s".formatted(randomMachine));
     }
 
-//        @Test
-//    @DisplayName("Gets expected amount of possible causes")
-//    void getsExpectedAmountOfPossibleCauses() {
-//        Machine randomMachine = Machine.values()[0]; // pick random machine
-//            for(Error error: errorCodeReader.machineErrors.get(randomMachine)){
-//                System.out.println("new error");
-//                System.out.println(error.getErrorCode());
-//                System.out.println(error.getPossibleCauses().size());
-//                System.out.println("iterating causes");
-//                for(PossibleCause possibleCause : error.getPossibleCauses()){
-//                    System.out.println(possibleCause.getCause());
-//                }
-//            }
-//            // pausing here for now, but we can see that all of these are redaing another error's causes
-//}
-
     @Test
     @DisplayName("Gets expected amount of possible causes")
     void getsExpectedAmountOfPossibleCauses() {
@@ -125,18 +109,10 @@ public class ErrorCodeReaderTest {
             Error actualError = targetError.get();
             assertEquals(errorCode, actualError.getErrorCode());
             assertEquals(expectedPossibleCauseCount, actualError.getPossibleCauses().size(), actualError.getErrorCode());
-            // You can also get the possible causes here using targetError.get().getPossibleCauses()
         } else {
             System.out.println("Expected error: %s not found".formatted(errorCode));
             System.out.println(errorCodeReader.machineErrors.get(randomMachine));
         }
-
-
-//        Error actualError =  errorCodeReader.machineErrors.get(randomMachine).get(0);
-//        List<PossibleCause> actualPossibleCauses = actualError.getPossibleCauses();
-//
-//        assertEquals(errorCode, actualError.getErrorCode());
-//        assertEquals(expectedPossibleCauseCount, actualPossibleCauses.size(), actualError.getErrorCode());
     }
 
     private String getRandomErrorFromCsv(String errorCsvPath){ // this never picks the middle one??
