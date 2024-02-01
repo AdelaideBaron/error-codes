@@ -15,8 +15,9 @@ import java.util.List;
 
 @Configuration
 @Slf4j
-public class ErrorCodeConfiguration {
-    private String ERROR_CODES_FILE_PATH = "src/main/resources/data/error_codes.csv";
+public class ErrorCodeReader { // obvs rename
+    // TODO do you want one csv per machine, or the same CSV and a column for machines?
+    private String ERROR_CODES_FILE_PATH = "src/main/resources/data/machine_1_error_codes.csv";
 
     public List<Error> getErrors(){
         return readErrors();

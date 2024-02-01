@@ -1,4 +1,4 @@
-package com.wes.error_codes;
+package com.wes.error_codes.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
