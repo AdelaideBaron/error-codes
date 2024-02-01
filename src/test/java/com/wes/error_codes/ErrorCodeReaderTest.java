@@ -1,5 +1,7 @@
 package com.wes.error_codes;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import com.wes.error_codes.model.Error;
 import com.wes.error_codes.model.Machine;
 import com.wes.error_codes.model.PossibleCause;
@@ -9,7 +11,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -71,6 +80,47 @@ public class ErrorCodeReaderTest {
     @DisplayName("Reads each machine's config")
     void readsEachMachineSConfig() {
         assertEquals(Machine.values().length, errorCodeReader.machineErrors.size());
+    }
+
+    @Test
+    @DisplayName("Gets expected amount of errors")
+    void getsExpectedAmountOfErrors() {
+        Machine randomMachine = Machine.values()[0]; // pick random machine
+        int expected = getAmountOfErrorsFromCsv(randomMachine.getFilePath());
+
+        int actual = errorCodeReader.machineErrors.get(randomMachine).size();
+
+        assertEquals(expected, actual, "Machine checked %s".formatted(randomMachine));
+    }
+
+//    @Test
+//    @DisplayName("Gets expected amount of possible causes")
+//    void getsExpectedAmountOfPossibleCauses() {
+//        Machine randomMachine = Machine.values()[0]; // pick random machine
+//        getRandomErrorFromCSV(randomMachine.getFilePath());
+//
+//    }
+//
+//    private String getRandomErrorFromCSV(String errorCsvPath){
+//// get a random error from the csv (column 0, ignoring the header)
+//        // count not null entries in other column, i.e. how many possible causes there are
+//    }
+
+
+    private int getAmountOfErrorsFromCsv(String errorCsvPath){
+        int notNullCount = 0;
+        try (CSVReader reader = new CSVReader(new FileReader(errorCsvPath))) {
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                if (line.length > 0 && line[0] != null && !line[0].isEmpty()) {
+                    notNullCount++;
+                }
+            }
+            notNullCount--;
+        } catch (IOException | CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+        return notNullCount;
     }
 
 
