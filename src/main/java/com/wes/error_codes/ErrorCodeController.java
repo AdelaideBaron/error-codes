@@ -1,4 +1,5 @@
 package com.wes.error_codes;
+import com.wes.error_codes.model.Machine;
 import com.wes.error_codes.util.ConfigHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,10 +40,7 @@ public class ErrorCodeController {
         // add their names (.getName) to a list
 
         // old way below
-        List<String> errors = yamlReaderService.readErrorCodesFromYaml(machine)
-                .stream()
-                .map(ErrorCode::name)
-                .collect(Collectors.toList());
+        List<String> errors = ConfigHelper.getErrorCodesForMachine(Machine.valueOf(machine));
 
         model.addAttribute("errors", errors);
 
