@@ -1,4 +1,4 @@
-Error or Error Message ,Possible Causes, Machine
+Error or Error Message ,Possible Causes, Machine, Error Details
 TEST_ERROR ,some_cause,MACHINE_1,error_1_details
 TEST_ERROR_2 ,another_cause,MACHINE_2,error_2_details
 ,another_cause_two,,
