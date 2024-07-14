@@ -18,15 +18,14 @@ import java.util.*;
 @Configuration
 @Slf4j
 public class ErrorCodeReader { // obvs rename
-    // TODO do you want one csv per machine, or the same CSV and a column for machines?
-    private String ERROR_CODES_FILE_PATH = "src/main/resources/data/ignore_this_file_1.csv";
-    private String ERROR_CODES_NEW_FILE_PATH = "src/main/resources/data/error_codes_test_file_newest_all_in_one.csv";
+    private String TO_BE_DELETED = "src/main/resources/data/ignore_this_file_1.csv";
+    private String MACHINE_ERROR_CODES = "src/main/resources/data/machine_error_codes.csv";
 
     @Bean
     public Set<String> getMachinesFromCsv(){
         Set<String> uniqueEntries = new HashSet<>();
 
-        try (CSVReader reader = new CSVReader(new FileReader(ERROR_CODES_NEW_FILE_PATH))) {
+        try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
             List<String[]> rows = reader.readAll();
 
             // Skip the header row (first row)
@@ -49,7 +48,7 @@ public class ErrorCodeReader { // obvs rename
     public Map<String, List<String>> getErrorCodeAndCausesFromCsv(){
             Map<String, List<String>> errorToCausesMap = new HashMap<>();
 
-        try (CSVReader reader = new CSVReader(new FileReader(ERROR_CODES_NEW_FILE_PATH))) {
+        try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
             List<String[]> rows = reader.readAll();
 
             String currentError = null;
@@ -81,7 +80,7 @@ public class ErrorCodeReader { // obvs rename
     public Map<String, List<String>> mapErrorCodesToMachines() {
         Map<String, List<String>> machineToErrorsMap = new HashMap<>();
 
-        try (CSVReader reader = new CSVReader(new FileReader(ERROR_CODES_NEW_FILE_PATH))) {
+        try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
             List<String[]> rows = reader.readAll();
 
             // Skip the header row (first row)
@@ -111,7 +110,7 @@ public class ErrorCodeReader { // obvs rename
     public Map<String, String> getErrorToDetailsMap() {
         Map<String, String> errorToDetailsMap = new HashMap<>();
 
-        try (CSVReader reader = new CSVReader(new FileReader(ERROR_CODES_NEW_FILE_PATH))) {
+        try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
             List<String[]> rows = reader.readAll();
 
             for (int i = 1; i < rows.size(); i++) {
@@ -188,7 +187,7 @@ log.info("ADDI " + errorToDetailsMap);
     public List<Error> readErrors(){ // refactor, can be void
         List<Error> errors = new ArrayList<>(); // Define errors list here
         List<List<String>> records = new ArrayList<List<String>>();
-        try (CSVReader csvReader = new CSVReader(new FileReader(ERROR_CODES_FILE_PATH));) {
+        try (CSVReader csvReader = new CSVReader(new FileReader(TO_BE_DELETED));) {
             String[] row = null;
             StringBuffer errorCode = new StringBuffer("");
             List<PossibleCause> possibleCauseList = new ArrayList<>();

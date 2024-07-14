@@ -67,9 +67,6 @@ public class ErrorCodeController {
 
         model.addAttribute("selectedMachine", machine);
 
-
-
-
         List<String> errors = machinesAndErrorCodes.get(machine);
         log.info(String.valueOf(errors));
 
@@ -93,6 +90,4 @@ public class ErrorCodeController {
 
         return "selected-error";
     }
-
-    // TODO filter the errors codes by machine
 }
