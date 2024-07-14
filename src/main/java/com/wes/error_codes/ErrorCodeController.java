@@ -40,7 +40,7 @@ public class ErrorCodeController {
     @Qualifier("machinesAndErrorCodes")
     Map<String, List<String>> machinesAndErrorCodes;
 
-    @GetMapping("/hello")
+    @GetMapping("")
     public String hello(Model model) {
         log.info("Homepage accessed");
 

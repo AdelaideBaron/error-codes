@@ -1,4 +1,3 @@
-<!-- src/main/resources/templates/selected-error.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -22,7 +21,10 @@
     </li>
 </ul>
 
-<!-- Link to navigate back to the selected machine page -->
-<p><a th:href="@{/select-machine?machine=${selectedMachine}}">Back to Selected Machine</a></p>
+<!-- Form to navigate back to the selected machine page using POST method -->
+<form th:action="@{/select-machine}" method="post">
+    <input type="hidden" name="machine" th:value="${selectedMachine}" />
+    <button type="submit">Back to Selected Machine</button>
+</form>
 </body>
 </html>
