@@ -34,8 +34,8 @@ public class ErrorCodeReader { // obvs rename
             // Skip the header row (first row)
             for (int i = 1; i < rows.size(); i++) {
                 String[] row = rows.get(i);
-                if (row.length > 2 && row[2] != null && !row[2].isEmpty()) {
-                    uniqueEntries.add(row[2]);
+                if (row.length > 2 && row[3] != null && !row[3].isEmpty()) {
+                    uniqueEntries.add(row[3]);
                 }
             }
 
@@ -67,7 +67,7 @@ public class ErrorCodeReader { // obvs rename
                 String[] row = rows.get(i);
                 if (row.length > 1) {
                     String error = row[0].trim();
-                    String cause = row[1].trim();
+                    String cause = row[2].trim();
 
                     if (!error.isEmpty()) {
                         currentError = error;
@@ -97,7 +97,7 @@ public class ErrorCodeReader { // obvs rename
                 String[] row = rows.get(i);
                 if (row.length > 3) {
                     String error = row[0].trim();
-                    String errorDetails = row[3].trim();
+                    String errorDetails = row[1].trim();
 
                     if (!error.isEmpty() && !errorDetails.isEmpty()) {
                         errorToDetailsMap.put(error, errorDetails);
