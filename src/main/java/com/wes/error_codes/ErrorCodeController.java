@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@RestController
+@Controller
 public class ErrorCodeController {
 
     @Autowired
