@@ -8,6 +8,7 @@ class ErrorCodesApplicationTests {
 
 	@Test
 	void contextLoads() {
+//		ErrorCodeConfiguration errorCodeConfiguration
 	}
 
 }
