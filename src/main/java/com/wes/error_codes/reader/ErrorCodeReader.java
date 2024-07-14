@@ -85,9 +85,37 @@ public class ErrorCodeReader { // obvs rename
             return errorToCausesMap;
     }
 
+    @Bean
+    public Map<String, String> getErrorToDetailsMap() {
+        Map<String, String> errorToDetailsMap = new HashMap<>();
+
+        try (CSVReader reader = new CSVReader(new FileReader(ERROR_CODES_NEW_FILE_PATH))) {
+            List<String[]> rows = reader.readAll();
+
+            // Skip the first line (header)
+            for (int i = 1; i < rows.size(); i++) {
+                String[] row = rows.get(i);
+                if (row.length > 3) {
+                    String error = row[0].trim();
+                    String errorDetails = row[3].trim();
+
+                    if (!error.isEmpty() && !errorDetails.isEmpty()) {
+                        errorToDetailsMap.put(error, errorDetails);
+                    }
+                }
+            }
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+
+        return errorToDetailsMap;
+    }
+
     public List<Error> getErrors(){
         return readErrors();
     } // Todo can disable use of this, only used within tests so cleanup needed
+
+
 
     public static List<Error> errorsFromCSV;
 

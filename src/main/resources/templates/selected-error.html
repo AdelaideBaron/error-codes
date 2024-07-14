@@ -12,21 +12,13 @@
 
 <!-- Display details for the selected error -->
 <h2>Details</h2>
-<ul>
-    <li th:each="detail : ${errorDetails}">
-        <p th:text="${detail}"></p>
-    </li>
-</ul>
+<p th:text="${errorDetails}"></p>
 
 <!-- Display causes and potential solutions for the selected error -->
 <h2>Causes & Potential Solutions</h2>
 <ul>
-    <li th:each="cause, index : ${causeDetails}">
-        <p>
-            <span th:text="${'CAUSE: ' + cause.description}"></span><br/>
-            <span th:text="${'  - description: ' + cause.description}"></span><br/>
-            <span th:text="${'  - solution: ' + cause.solution}"></span>
-        </p>
+    <li th:each="cause : ${causeDetails}">
+        <p th:text="${cause}"></p>
     </li>
 </ul>
 

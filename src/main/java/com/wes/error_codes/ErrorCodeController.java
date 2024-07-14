@@ -31,6 +31,9 @@ public class ErrorCodeController {
     @Autowired
     Map<String, List<String>>  codesAndCausesFromCsv;
 
+    @Autowired
+    Map<String, String> errorDetailsMap;
+
     @GetMapping("/hello")
     public String hello(Model model) {
         log.info("Homepage accessed");
@@ -58,7 +61,11 @@ public class ErrorCodeController {
         return errorsCodes;
     }
 
-    @PostMapping("/select-machine")
+    private List<String> getPossibleCauses(String errorCode){
+        return codesAndCausesFromCsv.get(errorCode);
+    }
+
+    @PostMapping("/select-machine")     // TODO filter the errors codes by machine
     public String selectMachine(@RequestParam String machine, Model model) {
         model.addAttribute("selectedMachine", machine);
 
@@ -85,14 +92,19 @@ public class ErrorCodeController {
         model.addAttribute("selectedMachine", machine);
         model.addAttribute("selectedError", error);
 
-        List<String> causes = yamlReaderService.getCauseByErrorFromConfig(error);
+//        List<String> causes = yamlReaderService.getCauseByErrorFromConfig(error);
+        log.info("THE ERROR " + error);
+        List<String> causes = getPossibleCauses(error);
         log.info("Causes for {}: {}", error, causes);
+        log.info("errorDetails: " + errorDetailsMap.get(error));
 
-        List<Cause> causeDetails = causeHandler.findCausesByError(causes);
+//        List<Cause> causeDetails = causeHandler.findCausesByError(causes);
 
-        model.addAttribute("errorDetails", ErrorCode.fromString(error).getDescription());
-        model.addAttribute("causeDetails", causeDetails);
+        model.addAttribute("errorDetails", errorDetailsMap.get(error));
+        model.addAttribute("causeDetails", causes);
 
         return "selected-error";
     }
+
+    // TODO filter the errors codes by machine
 }
