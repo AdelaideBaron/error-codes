@@ -7,6 +7,7 @@ import com.wes.error_codes.model.Error;
 import com.wes.error_codes.model.Machine;
 import com.wes.error_codes.model.PossibleCause;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,6 +45,7 @@ public class ErrorCodeReader { // obvs rename
     }
 
     @Bean
+    @Qualifier("errorCodesAndCauses")
     public Map<String, List<String>> getErrorCodeAndCausesFromCsv(){
             Map<String, List<String>> errorToCausesMap = new HashMap<>();
 
@@ -71,8 +73,39 @@ public class ErrorCodeReader { // obvs rename
         } catch (IOException | CsvException e) {
             e.printStackTrace();
         }
-            return errorToCausesMap;
+           return errorToCausesMap;
     }
+
+    @Bean
+    @Qualifier("machinesAndErrorCodes")
+    public Map<String, List<String>> mapErrorCodesToMachines() {
+        Map<String, List<String>> machineToErrorsMap = new HashMap<>();
+
+        try (CSVReader reader = new CSVReader(new FileReader(ERROR_CODES_NEW_FILE_PATH))) {
+            List<String[]> rows = reader.readAll();
+
+            // Skip the header row (first row)
+            for (int i = 1; i < rows.size(); i++) {
+                String[] row = rows.get(i);
+                if (row.length > 3) {
+                    String error = row[0].trim();
+                    String machine = row[3].trim();
+
+                    if (!error.isEmpty() && !machine.isEmpty()) {
+                        machineToErrorsMap.putIfAbsent(machine, new ArrayList<>());
+                        machineToErrorsMap.get(machine).add(error);
+                    }
+                }
+            }
+
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+
+        log.info("Machine to Errors Map: {}", machineToErrorsMap);
+        return machineToErrorsMap;
+    }
+
 
     @Bean
     public Map<String, String> getErrorToDetailsMap() {
@@ -95,7 +128,7 @@ public class ErrorCodeReader { // obvs rename
         } catch (IOException | CsvException e) {
             e.printStackTrace();
         }
-
+log.info("ADDI " + errorToDetailsMap);
         return errorToDetailsMap;
     }
 
@@ -147,6 +180,8 @@ public class ErrorCodeReader { // obvs rename
         errorsFromCSV = errors;
         return errors;
     }
+
+
 
     // Todo refactor the below
     @Bean

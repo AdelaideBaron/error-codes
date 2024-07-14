@@ -2,6 +2,7 @@ package com.wes.error_codes;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +30,15 @@ public class ErrorCodeController {
     Set<String> machinesFromCSV;
 
     @Autowired
+    @Qualifier("errorCodesAndCauses")
     Map<String, List<String>>  codesAndCausesFromCsv;
 
     @Autowired
     Map<String, String> errorDetailsMap;
+
+    @Autowired
+    @Qualifier("machinesAndErrorCodes")
+    Map<String, List<String>> machinesAndErrorCodes;
 
     @GetMapping("/hello")
     public String hello(Model model) {
@@ -61,7 +67,11 @@ public class ErrorCodeController {
 
         model.addAttribute("selectedMachine", machine);
 
-        List<String> errors = getErrorCodes();
+
+
+
+        List<String> errors = machinesAndErrorCodes.get(machine);
+        log.info(String.valueOf(errors));
 
         model.addAttribute("errors", errors);
 
