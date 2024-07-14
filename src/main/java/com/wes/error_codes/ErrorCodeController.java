@@ -37,20 +37,10 @@ public class ErrorCodeController {
     @GetMapping("/hello")
     public String hello(Model model) {
         log.info("Homepage accessed");
-//        List<String> machines = yamlReaderService.readMachinesFromYaml();
-//        List<String> machines = (List<String>) machinesFromCSV;//  yamlReaderService.readMachinesFromYaml();
-//        Set<String>
+
         model.addAttribute("machines", machinesFromCSV);
 
-//        log.warn(codesAndCausesFromCsv.);
-
-//        for (Map.Entry<String, List<String>> entry : codesAndCausesFromCsv.entrySet()) {
-//            System.out.println("Error: " + entry.getKey());
-//            System.out.println("Causes: " + entry.getValue());
-//            System.out.println();
-//        }
-
-        return "hello"; // to be removed
+        return "hello";
     }
 
     private List<String> getErrorCodes() {
@@ -67,20 +57,11 @@ public class ErrorCodeController {
 
     @PostMapping("/select-machine")     // TODO filter the errors codes by machine
     public String selectMachine(@RequestParam String machine, Model model) {
+        log.info("Selected machine: " + machine);
+
         model.addAttribute("selectedMachine", machine);
 
-        // Fetch the list of errors for the selected machine
-
-        // get the errors from ErrorCodeConfiguration, then display the error.getErrorCode for each
-        // for error in ErrorCodeConfig.getErrors():
-        // add their names (.getName) to a list
-
-        // old way below
         List<String> errors = getErrorCodes();
-//        List<String> errors = yamlReaderService.readErrorCodesFromYaml(machine)
-//                .stream()
-//                .map(ErrorCode::name)
-//                .collect(Collectors.toList());
 
         model.addAttribute("errors", errors);
 
@@ -92,13 +73,10 @@ public class ErrorCodeController {
         model.addAttribute("selectedMachine", machine);
         model.addAttribute("selectedError", error);
 
-//        List<String> causes = yamlReaderService.getCauseByErrorFromConfig(error);
         log.info("THE ERROR " + error);
         List<String> causes = getPossibleCauses(error);
         log.info("Causes for {}: {}", error, causes);
         log.info("errorDetails: " + errorDetailsMap.get(error));
-
-//        List<Cause> causeDetails = causeHandler.findCausesByError(causes);
 
         model.addAttribute("errorDetails", errorDetailsMap.get(error));
         model.addAttribute("causeDetails", causes);
