@@ -2,6 +2,7 @@ package com.wes.error_codes;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,29 +26,49 @@ public class ErrorCodeController {
     @Autowired
     private CauseHandler causeHandler;
 
+    @Autowired
+    Set<String> machinesFromCSV;
+
+    @Autowired
+    @Qualifier("errorCodesAndCauses")
+    Map<String, List<String>>  codesAndCausesFromCsv;
+
+    @Autowired
+    Map<String, String> errorDetailsMap;
+
+    @Autowired
+    @Qualifier("machinesAndErrorCodes")
+    Map<String, List<String>> machinesAndErrorCodes;
+
     @GetMapping("/hello")
     public String hello(Model model) {
         log.info("Homepage accessed");
-        List<String> machines = yamlReaderService.readMachinesFromYaml();
-        model.addAttribute("machines", machines);
-        return "hello"; // to be removed
+
+        model.addAttribute("machines", machinesFromCSV);
+
+        return "hello";
     }
 
-    @PostMapping("/select-machine")
+    private List<String> getErrorCodes() {
+        List<String> errorsCodes = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : codesAndCausesFromCsv.entrySet()) {
+            errorsCodes.add(entry.getKey());
+        }
+        return errorsCodes;
+    }
+
+    private List<String> getPossibleCauses(String errorCode){
+        return codesAndCausesFromCsv.get(errorCode);
+    }
+
+    @PostMapping("/select-machine")     // TODO filter the errors codes by machine
     public String selectMachine(@RequestParam String machine, Model model) {
+        log.info("Selected machine: " + machine);
+
         model.addAttribute("selectedMachine", machine);
 
-        // Fetch the list of errors for the selected machine
-
-        // get the errors from ErrorCodeConfiguration, then display the error.getErrorCode for each
-        // for error in ErrorCodeConfig.getErrors():
-        // add their names (.getName) to a list
-
-        // old way below
-        List<String> errors = yamlReaderService.readErrorCodesFromYaml(machine)
-                .stream()
-                .map(ErrorCode::name)
-                .collect(Collectors.toList());
+        List<String> errors = machinesAndErrorCodes.get(machine);
+        log.info(String.valueOf(errors));
 
         model.addAttribute("errors", errors);
 
@@ -56,13 +80,13 @@ public class ErrorCodeController {
         model.addAttribute("selectedMachine", machine);
         model.addAttribute("selectedError", error);
 
-        List<String> causes = yamlReaderService.getCauseByErrorFromConfig(error);
+        log.info("THE ERROR " + error);
+        List<String> causes = getPossibleCauses(error);
         log.info("Causes for {}: {}", error, causes);
+        log.info("errorDetails: " + errorDetailsMap.get(error));
 
-        List<Cause> causeDetails = causeHandler.findCausesByError(causes);
-
-        model.addAttribute("errorDetails", ErrorCode.fromString(error).getDescription());
-        model.addAttribute("causeDetails", causeDetails);
+        model.addAttribute("errorDetails", errorDetailsMap.get(error));
+        model.addAttribute("causeDetails", causes);
 
         return "selected-error";
     }

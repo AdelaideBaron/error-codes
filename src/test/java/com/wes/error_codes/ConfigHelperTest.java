@@ -10,21 +10,21 @@ import java.util.List;
 
 public class ConfigHelperTest {
 
-    private final String TEST_ERROR_CODES_FILE_PATH = "src/test/resources/error_codes_test_file.csv";
-
-
-    @InjectMocks
-    private ErrorCodeReader errorCodeReader;
-
-
-    public List<Error> errorsFromCsv;
-
-    @BeforeEach
-    public void setup(){
-        errorCodeReader = new ErrorCodeReader();
-        ReflectionTestUtils.setField(errorCodeReader, "ERROR_CODES_FILE_PATH", TEST_ERROR_CODES_FILE_PATH);
-        errorsFromCsv = errorCodeReader.getErrors();
-    }
+//    private final String TEST_ERROR_CODES_FILE_PATH = "src/test/resources/error_codes_test_file.csv";
+//
+//
+//    @InjectMocks
+//    private ErrorCodeReader errorCodeReader;
+//
+//
+//    public List<Error> errorsFromCsv;
+//
+//    @BeforeEach
+//    public void setup(){
+//        errorCodeReader = new ErrorCodeReader();
+//        ReflectionTestUtils.setField(errorCodeReader, "ERROR_CODES_FILE_PATH", TEST_ERROR_CODES_FILE_PATH);
+//        errorsFromCsv = errorCodeReader.getErrors();
+//    }
 
 
     // TEST THESE

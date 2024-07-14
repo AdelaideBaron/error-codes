@@ -1,0 +1,9 @@
+Error or Error Message ,Error Details,Possible Causes, Machine
+TEST_ERROR ,error_1_details,some_cause,MACHINE_1
+TEST_ERROR_2 ,error_2_details,another_cause,MACHINE_2
+,,another_cause_two,
+,,another_cause_three,
+,,,
+TEST_ERROR_3 ,error_3_details,another_cause_one,MACHINE_1
+,,another_cause_four,
+,,another_cause_five,
