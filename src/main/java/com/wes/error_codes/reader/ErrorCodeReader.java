@@ -19,7 +19,7 @@ import java.util.*;
 @Slf4j
 public class ErrorCodeReader { // obvs rename
     // TODO do you want one csv per machine, or the same CSV and a column for machines?
-    private String ERROR_CODES_FILE_PATH = "src/main/resources/data/machine_1_error_codes.csv";
+    private String ERROR_CODES_FILE_PATH = "src/main/resources/data/ignore_this_file_1.csv";
     private String ERROR_CODES_NEW_FILE_PATH = "src/main/resources/data/error_codes_test_file_newest_all_in_one.csv";
 
     @Bean
