@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,11 +23,16 @@ public class ErrorCodeController {
     @Autowired
     private CauseHandler causeHandler;
 
+    @Autowired
+    Set<String> machinesFromCSV;
+
     @GetMapping("/hello")
     public String hello(Model model) {
         log.info("Homepage accessed");
-        List<String> machines = yamlReaderService.readMachinesFromYaml();
-        model.addAttribute("machines", machines);
+//        List<String> machines = yamlReaderService.readMachinesFromYaml();
+//        List<String> machines = (List<String>) machinesFromCSV;//  yamlReaderService.readMachinesFromYaml();
+//        Set<String>
+        model.addAttribute("machines", machinesFromCSV);
         return "hello"; // to be removed
     }
 

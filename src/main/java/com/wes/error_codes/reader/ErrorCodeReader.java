@@ -1,6 +1,7 @@
 package com.wes.error_codes.reader;
 
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import com.opencsv.exceptions.CsvValidationException;
 import com.wes.error_codes.model.Error;
 import com.wes.error_codes.model.Machine;
@@ -11,16 +12,47 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Configuration
 @Slf4j
 public class ErrorCodeReader { // obvs rename
     // TODO do you want one csv per machine, or the same CSV and a column for machines?
     private String ERROR_CODES_FILE_PATH = "src/main/resources/data/machine_1_error_codes.csv";
+    private String ERROR_CODES_NEW_FILE_PATH = "src/main/resources/data/error_codes_test_file_newest_all_in_one.csv";
+
+    @Bean
+    public Set<String> getMachinesFromCsv(){
+//        ERROR_CODES_NEW_FILE_PATH
+
+//        String csvFile = "path/to/your/csvfile.csv"; // Update the path to your CSV file
+        Set<String> uniqueEntries = new HashSet<>();
+
+        try (CSVReader reader = new CSVReader(new FileReader(ERROR_CODES_NEW_FILE_PATH))) {
+            List<String[]> rows = reader.readAll();
+
+            // Skip the header row (first row)
+            for (int i = 1; i < rows.size(); i++) {
+                String[] row = rows.get(i);
+                if (row.length > 2 && row[2] != null && !row[2].isEmpty()) {
+                    uniqueEntries.add(row[2]);
+                }
+            }
+
+//            // Print unique entries
+//            System.out.println("Unique entries in the final column:");
+//            for (String entry : uniqueEntries) {
+//                System.out.println(entry);
+//            }
+
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+
+        return uniqueEntries;
+
+
+    }
 
     public List<Error> getErrors(){
         return readErrors();
