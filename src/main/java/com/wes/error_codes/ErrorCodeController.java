@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,9 @@ public class ErrorCodeController {
     @Autowired
     Set<String> machinesFromCSV;
 
+    @Autowired
+    Map<String, List<String>>  codesAndCausesFromCsv;
+
     @GetMapping("/hello")
     public String hello(Model model) {
         log.info("Homepage accessed");
@@ -33,7 +38,24 @@ public class ErrorCodeController {
 //        List<String> machines = (List<String>) machinesFromCSV;//  yamlReaderService.readMachinesFromYaml();
 //        Set<String>
         model.addAttribute("machines", machinesFromCSV);
+
+//        log.warn(codesAndCausesFromCsv.);
+
+//        for (Map.Entry<String, List<String>> entry : codesAndCausesFromCsv.entrySet()) {
+//            System.out.println("Error: " + entry.getKey());
+//            System.out.println("Causes: " + entry.getValue());
+//            System.out.println();
+//        }
+
         return "hello"; // to be removed
+    }
+
+    private List<String> getErrorCodes() {
+        List<String> errorsCodes = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : codesAndCausesFromCsv.entrySet()) {
+            errorsCodes.add(entry.getKey());
+        }
+        return errorsCodes;
     }
 
     @PostMapping("/select-machine")
@@ -47,10 +69,11 @@ public class ErrorCodeController {
         // add their names (.getName) to a list
 
         // old way below
-        List<String> errors = yamlReaderService.readErrorCodesFromYaml(machine)
-                .stream()
-                .map(ErrorCode::name)
-                .collect(Collectors.toList());
+        List<String> errors = getErrorCodes();
+//        List<String> errors = yamlReaderService.readErrorCodesFromYaml(machine)
+//                .stream()
+//                .map(ErrorCode::name)
+//                .collect(Collectors.toList());
 
         model.addAttribute("errors", errors);
 

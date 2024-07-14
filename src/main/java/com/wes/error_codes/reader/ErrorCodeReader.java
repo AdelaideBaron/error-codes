@@ -54,6 +54,37 @@ public class ErrorCodeReader { // obvs rename
 
     }
 
+    @Bean
+    public Map<String, List<String>> getErrorCodeAndCausesFromCsv(){
+            Map<String, List<String>> errorToCausesMap = new HashMap<>();
+
+        try (CSVReader reader = new CSVReader(new FileReader(ERROR_CODES_NEW_FILE_PATH))) {
+            List<String[]> rows = reader.readAll();
+
+            String currentError = null;
+            // Skip the first line (header)
+            for (int i = 1; i < rows.size(); i++) {
+                String[] row = rows.get(i);
+                if (row.length > 1) {
+                    String error = row[0].trim();
+                    String cause = row[1].trim();
+
+                    if (!error.isEmpty()) {
+                        currentError = error;
+                        errorToCausesMap.putIfAbsent(currentError, new ArrayList<>());
+                    }
+
+                    if (currentError != null && !cause.isEmpty()) {
+                        errorToCausesMap.get(currentError).add(cause);
+                    }
+                }
+            }
+        } catch (IOException | CsvException e) {
+            e.printStackTrace();
+        }
+            return errorToCausesMap;
+    }
+
     public List<Error> getErrors(){
         return readErrors();
     } // Todo can disable use of this, only used within tests so cleanup needed
