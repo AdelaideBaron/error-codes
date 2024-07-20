@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ErrorCodeController {
 
-  @Autowired private YamlReaderService yamlReaderService;
-  @Autowired private CauseHandler causeHandler;
-
   @Autowired Set<String> machinesFromCSV;
 
   @Autowired

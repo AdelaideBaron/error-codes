@@ -2,9 +2,6 @@ package com.wes.error_codes.reader;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import com.opencsv.exceptions.CsvValidationException;
-import com.wes.error_codes.model.Error;
-import com.wes.error_codes.model.PossibleCause;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -17,8 +14,6 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class ErrorCodeReader { // obvs rename
   private String MACHINE_ERROR_CODES = "src/main/resources/data/machine_error_codes.csv";
-
-  public static List<Error> errorsFromCSV;
 
   @Bean
   public Set<String> getMachinesFromCsv() {
@@ -127,39 +122,5 @@ public class ErrorCodeReader { // obvs rename
     }
     log.info("ADDI " + errorToDetailsMap);
     return errorToDetailsMap;
-  }
-
-  public List<Error> readErrors(String filePath) {
-    List<Error> errors = new ArrayList<>();
-    try (CSVReader csvReader = new CSVReader(new FileReader(filePath)); ) {
-      String[] row = null;
-      StringBuffer errorCode = new StringBuffer("");
-      List<PossibleCause> possibleCauseList = new ArrayList<>();
-      boolean firstLine = true;
-      while ((row = csvReader.readNext()) != null) {
-        if (firstLine) {
-          firstLine = false;
-        } else {
-          if (!row[0].isEmpty()) {
-            errorCode.append(row[0].replace(" ", ""));
-            possibleCauseList.add(new PossibleCause(row[1]));
-          } else if (row[0].isEmpty() && !row[1].isEmpty()) {
-            possibleCauseList.add(new PossibleCause(row[1]));
-          } else if (row[0].isEmpty() && row[1].isEmpty()) {
-            errors.add(new Error(errorCode.toString(), new ArrayList<>(possibleCauseList)));
-            errorCode.setLength(0);
-            possibleCauseList.clear();
-          }
-        }
-      }
-      if (errorCode.length() > 0) {
-        errors.add(new Error(errorCode.toString(), new ArrayList<>(possibleCauseList)));
-      }
-
-    } catch (IOException | CsvValidationException e) {
-      throw new RuntimeException(e);
-    }
-    errorsFromCSV = errors;
-    return errors;
   }
 }
