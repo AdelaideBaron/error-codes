@@ -132,23 +132,34 @@ public class ErrorCodeReader { // obvs rename
     try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
       List<String[]> rows = reader.readAll();
 
+      if (rows.isEmpty()) {
+        return machineErrorCodes; // Return empty list if no rows are present
+      }
+
+      // Read headers
+      String[] headers = rows.get(0);
+      int errorCodeIndex = findColumnIndex(headers, "Error Code");
+      int errorDetailsIndex = findColumnIndex(headers, "Error Details");
+      int possibleCausesIndex = findColumnIndex(headers, "Possible Causes");
+      int machineIndex = findColumnIndex(headers, "Machine");
+
       String currentErrorCode = null;
       String currentErrorDetails = null;
       String currentMachine = null;
       List<String> currentPossibleCauses = new ArrayList<>();
 
-      // Skip the header row (first row)
+      // Process rows
       for (int i = 1; i < rows.size(); i++) {
         String[] row = rows.get(i);
 
-        if (row.length < 4) {
+        if (row.length < headers.length) {
           continue; // Ignore rows with insufficient columns
         }
 
-        String errorCode = row[0].trim();
-        String errorDetails = row[1].trim();
-        String possibleCause = row[2].trim();
-        String machine = row[3].trim();
+        String errorCode = getValueAtIndex(row, errorCodeIndex);
+        String errorDetails = getValueAtIndex(row, errorDetailsIndex);
+        String possibleCause = getValueAtIndex(row, possibleCausesIndex);
+        String machine = getValueAtIndex(row, machineIndex);
 
         // If the error code is populated, create a new MachineErrorCode instance
         if (!errorCode.isEmpty()) {
@@ -180,5 +191,21 @@ public class ErrorCodeReader { // obvs rename
     }
 
     return machineErrorCodes;
+  }
+
+  private int findColumnIndex(String[] headers, String columnName) {
+    for (int i = 0; i < headers.length; i++) {
+      if (columnName.equalsIgnoreCase(headers[i].trim())) {
+        return i;
+      }
+    }
+    throw new IllegalArgumentException("Column not found: " + columnName);
+  }
+
+  private String getValueAtIndex(String[] row, int index) {
+    if (index >= 0 && index < row.length) {
+      return row[index].trim();
+    }
+    return "";
   }
 }
