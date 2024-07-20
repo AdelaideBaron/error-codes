@@ -1,5 +1,7 @@
 # Error Code filter 
-An app to display machines and error codes, and the possible solutions, on a simple website. 
+An app to display machines and error codes, and the possible solutions, on a simple website.
+
+This was created for a specific engineer, however real data is not held in this repository. 
 
 # How to use
 **⚠️⚠️ Any updates made to the error codes csv requires the app to be restarted ⚠️⚠️** 
