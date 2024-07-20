@@ -37,8 +37,3 @@ If using intelliJ, it is a simple SpringBoot app with no external dependencies -
 - Setup authtoken, you'll need an account 
 - https://dashboard.ngrok.com/get-started/your-authtoken 
 - Configure this via command line as instructed
-
-## Endpoints 
-Please see the swagger docs at http://localhost:8080/swagger-ui/index.html (change as appropriate if you are not on port 8080). 
-
-
