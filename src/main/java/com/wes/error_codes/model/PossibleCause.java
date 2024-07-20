@@ -7,6 +7,5 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public class PossibleCause {
 
-    private final String cause;
-
+  private final String cause;
 }
