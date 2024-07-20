@@ -15,7 +15,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @Slf4j
 public class ErrorCodeReader { // obvs rename
-  private String MACHINE_ERROR_CODES = "src/main/resources/data/machine_error_codes.csv";
+  private final String MACHINE_ERROR_CODES = "src/main/resources/data/machine_error_codes.csv";
+
+  private final String ERROR_CODE_COL_HEAD = "Error Code";
+
+  private final String ERROR_DETAILS_COL_HEAD = "Error Details";
+
+  private final String POSSIBLE_CAUSES_COL_HEAD = "Possible Causes";
+
+  private final String MACHINE_COL_HEAD = "Machine";
 
   @Bean
   public Set<String> getMachinesFromCsv() {
@@ -138,10 +146,10 @@ public class ErrorCodeReader { // obvs rename
 
       // Read headers
       String[] headers = rows.get(0);
-      int errorCodeIndex = findColumnIndex(headers, "Error Code");
-      int errorDetailsIndex = findColumnIndex(headers, "Error Details");
-      int possibleCausesIndex = findColumnIndex(headers, "Possible Causes");
-      int machineIndex = findColumnIndex(headers, "Machine");
+      int errorCodeIndex = findColumnIndex(headers, ERROR_CODE_COL_HEAD);
+      int errorDetailsIndex = findColumnIndex(headers, ERROR_DETAILS_COL_HEAD);
+      int possibleCausesIndex = findColumnIndex(headers, POSSIBLE_CAUSES_COL_HEAD);
+      int machineIndex = findColumnIndex(headers, MACHINE_COL_HEAD);
 
       String currentErrorCode = null;
       String currentErrorDetails = null;
