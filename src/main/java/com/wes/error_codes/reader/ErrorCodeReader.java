@@ -6,16 +6,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import com.wes.error_codes.model.ErrorCodes;
 import com.wes.error_codes.model.MachineErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Slf4j
 public class ErrorCodeReader { // obvs rename
-  private final String MACHINE_ERROR_CODES = "src/main/resources/data/machine_error_codes.csv";
+
+  @Value("${errorCode.filePath}")
+  private String MACHINE_ERROR_CODES; // = "src/main/resources/data/machine_error_codes.csv";
 
   private final String ERROR_CODE_COL_HEAD = "Error Code";
 
@@ -111,37 +115,18 @@ public class ErrorCodeReader { // obvs rename
 
   @Bean
   public Map<String, String> getErrorsWithDetails() {
-    Map<String, String> errorToDetailsMap = new HashMap<>();
-
-    try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
-      List<String[]> rows = reader.readAll();
-
-      for (int i = 1; i < rows.size(); i++) {
-        String[] row = rows.get(i);
-        if (row.length > 3) {
-          String error = row[0].trim();
-          String errorDetails = row[1].trim();
-
-          if (!error.isEmpty() && !errorDetails.isEmpty()) {
-            errorToDetailsMap.put(error, errorDetails);
-          }
-        }
-      }
-    } catch (IOException | CsvException e) {
-      e.printStackTrace();
-    }
-    log.info("ADDI " + errorToDetailsMap);
-    return errorToDetailsMap;
+return mapCsvToMachineErrorCodes().getDetailsForAllErrorCodes();
   }
 
-  public List<MachineErrorCode> mapCsvToMachineErrorCodes() {
+//  @Bean
+  public ErrorCodes mapCsvToMachineErrorCodes() {
     List<MachineErrorCode> machineErrorCodes = new ArrayList<>();
 
     try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
       List<String[]> rows = reader.readAll();
 
       if (rows.isEmpty()) {
-        return machineErrorCodes;
+          return new ErrorCodes(machineErrorCodes);
       }
 
       String[] headers = rows.get(0);
@@ -197,8 +182,7 @@ public class ErrorCodeReader { // obvs rename
       e.printStackTrace();
     }
 
-    return machineErrorCodes;
-  }
+    return new ErrorCodes(machineErrorCodes);  }
 
   private int findColumnIndex(String[] headers, String columnName) {
     for (int i = 0; i < headers.length; i++) {
