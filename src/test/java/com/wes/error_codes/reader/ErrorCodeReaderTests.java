@@ -9,18 +9,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
+@SpringBootTest
+@ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class ErrorCodeReaderTests {
 
   private TestData testData = new TestData();
 
-  @InjectMocks private ErrorCodeReader errorCodeReader;
+  @InjectMocks private ErrorCodeCSVReader errorCodeReader;
 
   @BeforeEach
   public void setup() {
-    errorCodeReader = new ErrorCodeReader();
+    errorCodeReader = new ErrorCodeCSVReader();
     ReflectionTestUtils.setField(
         errorCodeReader, "MACHINE_ERROR_CODES", testData.TEST_ERROR_CODES_FILE_PATH);
   }
