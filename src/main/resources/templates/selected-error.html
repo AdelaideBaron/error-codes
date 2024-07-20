@@ -2,29 +2,32 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error</title>
+    <link rel="stylesheet" href="/styles.css"/>
 </head>
 <body>
-<h1>Error</h1>
-<p>Selected machine: <span th:text="${selectedMachine}"></span></p>
-<p>Selected error: <span th:text="${selectedError}"></span></p>
+<div class="container">
+    <h1 th:text="${selectedError}">Error</h1>
+    <p>Selected machine: <span th:text="${selectedMachine}"></span></p>
 
-<!-- Display details for the selected error -->
-<h2>Details</h2>
-<p th:text="${errorDetails}"></p>
+    <!-- Display details for the selected error -->
+    <h2>Details</h2>
+    <p th:text="${errorDetails}"></p>
 
-<!-- Display causes and potential solutions for the selected error -->
-<h2>Causes & Potential Solutions</h2>
-<ul>
-    <li th:each="cause : ${causeDetails}">
-        <p th:text="${cause}"></p>
-    </li>
-</ul>
+    <!-- Display causes and potential solutions for the selected error -->
+    <h2>Causes & Potential Solutions</h2>
+    <ul>
+        <li th:each="cause : ${causeDetails}">
+            <p th:text="${cause}"></p>
+        </li>
+    </ul>
 
-<!-- Form to navigate back to the selected machine page using POST method -->
-<form th:action="@{/select-machine}" method="post">
-    <input type="hidden" name="machine" th:value="${selectedMachine}" />
-    <button type="submit">Back to Selected Machine</button>
-</form>
+    <!-- Form to navigate back to the selected machine page using POST method -->
+    <form th:action="@{/select-machine}" method="post">
+        <input type="hidden" name="machine" th:value="${selectedMachine}" />
+        <button type="submit">Back to Selected Machine</button>
+    </form>
+</div>
 </body>
 </html>

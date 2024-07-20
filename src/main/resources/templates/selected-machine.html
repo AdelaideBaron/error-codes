@@ -1,43 +1,32 @@
-<!-- src/main/resources/templates/selected-machine.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selected Machine</title>
-    <style>
-        #errorList {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .errorItem {
-            margin: 5px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
+    <link rel="stylesheet" href="/styles.css"/>
 </head>
 <body>
-<h1>Machine Details</h1>
-<p>Selected machine: <span th:text="${selectedMachine}"></span></p>
+<div class="container">
+    <h1>Machine Details</h1>
+    <p>Selected machine: <span th:text="${selectedMachine}"></span></p>
 
-<!-- Add a search box for error codes -->
-<label for="searchBox">Search Error Codes:</label>
-<input type="text" id="searchBox" oninput="searchErrors()">
+    <!-- Add a search box for error codes -->
+    <label for="searchBox">Search Error Codes:</label>
+    <input type="text" id="searchBox" oninput="searchErrors()">
 
-<!-- Display a list of errors for the selected machine -->
-<ul id="errorList">
-    <li th:each="error : ${errors}" class="errorItem">
-        <a th:href="@{/select-error(machine=${selectedMachine},error=${error})}" th:text="${error}"></a>
-    </li>
-</ul>
+    <!-- Display a list of errors for the selected machine -->
+    <ul id="errorList">
+        <li th:each="error : ${errors}" class="errorItem">
+            <a th:href="@{/select-error(machine=${selectedMachine},error=${error})}" th:text="${error}"></a>
+        </li>
+    </ul>
 
-<!-- Link to navigate back to the previous page -->
-<p><a th:href="@{~/}">Back to Machine Selection</a></p>
+    <!-- Link to navigate back to the previous page -->
+    <p><a class="back-link" th:href="@{~/}">Back to Machine Selection</a></p>
+</div>
 
 <script>
-    const errorList = document.getElementById("errorList");
     const errorItems = document.getElementsByClassName("errorItem");
 
     function searchErrors() {
@@ -53,6 +42,5 @@
         });
     }
 </script>
-
 </body>
 </html>

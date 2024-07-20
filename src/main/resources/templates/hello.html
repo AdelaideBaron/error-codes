@@ -3,20 +3,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Error Code Filter</title>
+    <link rel="stylesheet" href="/styles.css"/>
 </head>
 <body>
-<h1>Hi Wes!</h1>
-<p>Welcome to the error code filter.</p>
+<div class="container">
+    <h1>Welcome to the Error Code Filter!</h1>
 
-<form action="/select-machine" method="post">
-    <label for="machine">Please select your machine:</label>
-    <select name="machine" id="machine">
-        <!-- Thymeleaf syntax to iterate over a list of machines -->
-        <option th:each="machine : ${machines}" th:value="${machine}" th:text="${machine}"></option>
-    </select>
-    <br/>
-    <input type="submit" value="Proceed"/>
-</form>
+    <form action="/select-machine" method="post">
+        <label for="machine">Please select your machine:</label>
+        <select name="machine" id="machine">
+            <!-- Thymeleaf syntax to iterate over a list of machines -->
+            <option th:each="machine : ${machines}" th:value="${machine}" th:text="${machine}"></option>
+        </select>
+        <input type="submit" value="Proceed"/>
+    </form>
+</div>
 </body>
 </html>
