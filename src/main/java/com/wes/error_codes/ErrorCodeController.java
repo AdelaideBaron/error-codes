@@ -25,19 +25,13 @@ public class ErrorCodeController {
     return "hello";
   }
 
-  private List<String> getPossibleCauses(String errorCode) {
-    return errorCodeCSVReader.getErrorCodeAndCausesFromCsv().get(errorCode);
-  }
-
   @PostMapping("/select-machine")
   public String selectMachine(@RequestParam String machine, Model model) {
-    log.info("Selected machine: " + machine);
-
-    model.addAttribute("selectedMachine", machine);
+    log.info("Viewing selected machine: {}", machine);
 
     List<String> errors = errorCodeCSVReader.getMachinesWithErrorCodes().get(machine);
-    log.info(String.valueOf(errors));
 
+    model.addAttribute("selectedMachine", machine);
     model.addAttribute("errors", errors);
 
     return "selected-machine";
@@ -45,17 +39,19 @@ public class ErrorCodeController {
 
   @GetMapping("/select-error")
   public String selectError(@RequestParam String machine, @RequestParam String error, Model model) {
+    log.info("Viewing error {} for machine {}", error, machine);
     model.addAttribute("selectedMachine", machine);
     model.addAttribute("selectedError", error);
 
-    log.info("THE ERROR " + error);
     List<String> causes = getPossibleCauses(error);
-    log.info("Causes for {}: {}", error, causes);
-    log.info("errorDetails: " + errorCodeCSVReader.getErrorsWithDetails().get(error));
 
     model.addAttribute("errorDetails", errorCodeCSVReader.getErrorsWithDetails().get(error));
     model.addAttribute("causeDetails", causes);
 
     return "selected-error";
+  }
+
+  private List<String> getPossibleCauses(String errorCode) {
+    return errorCodeCSVReader.getErrorCodeAndCausesFromCsv().get(errorCode);
   }
 }
