@@ -1,11 +1,9 @@
 package com.wes.error_codes;
 
+import com.wes.error_codes.reader.ErrorCodeCSVReader;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,29 +14,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ErrorCodeController {
 
-  @Autowired Set<String> machinesFromCSV;
-
-  @Autowired
-  @Qualifier("errorCodesAndCauses")
-  Map<String, List<String>> codesAndCausesFromCsv;
-
-  @Autowired Map<String, String> errorDetailsMap;
-
-  @Autowired
-  @Qualifier("machinesAndErrorCodes")
-  Map<String, List<String>> machinesAndErrorCodes;
+  @Autowired private ErrorCodeCSVReader errorCodeCSVReader;
 
   @GetMapping("")
   public String hello(Model model) {
     log.info("Homepage accessed");
 
-    model.addAttribute("machines", machinesFromCSV);
+    model.addAttribute("machines", errorCodeCSVReader.getMachinesFromCsv());
 
     return "hello";
   }
 
   private List<String> getPossibleCauses(String errorCode) {
-    return codesAndCausesFromCsv.get(errorCode);
+    return errorCodeCSVReader.getErrorCodeAndCausesFromCsv().get(errorCode);
   }
 
   @PostMapping("/select-machine")
@@ -47,7 +35,7 @@ public class ErrorCodeController {
 
     model.addAttribute("selectedMachine", machine);
 
-    List<String> errors = machinesAndErrorCodes.get(machine);
+    List<String> errors = errorCodeCSVReader.getMachinesWithErrorCodes().get(machine);
     log.info(String.valueOf(errors));
 
     model.addAttribute("errors", errors);
@@ -63,9 +51,9 @@ public class ErrorCodeController {
     log.info("THE ERROR " + error);
     List<String> causes = getPossibleCauses(error);
     log.info("Causes for {}: {}", error, causes);
-    log.info("errorDetails: " + errorDetailsMap.get(error));
+    log.info("errorDetails: " + errorCodeCSVReader.getErrorsWithDetails().get(error));
 
-    model.addAttribute("errorDetails", errorDetailsMap.get(error));
+    model.addAttribute("errorDetails", errorCodeCSVReader.getErrorsWithDetails().get(error));
     model.addAttribute("causeDetails", causes);
 
     return "selected-error";

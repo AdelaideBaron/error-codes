@@ -8,17 +8,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
+@Component
 @Slf4j
-public class ErrorCodeCSVReader { // obvs rename
+public class ErrorCodeCSVReader {
 
   @Value("${errorCode.filePath}")
-  private String MACHINE_ERROR_CODES; // = "src/main/resources/data/machine_error_codes.csv";
+  private String MACHINE_ERROR_CODES;
 
   private final String ERROR_CODE_COL_HEAD = "Error Code";
 
@@ -28,25 +26,19 @@ public class ErrorCodeCSVReader { // obvs rename
 
   private final String MACHINE_COL_HEAD = "Machine";
 
-  @Bean
   public Set<String> getMachinesFromCsv() {
     return mapCsvToMachineErrorCodes().getAllUniqueMachines();
   }
 
-  @Bean
-  @Qualifier("errorCodesAndCauses")
   public Map<String, List<String>> getErrorCodeAndCausesFromCsv() {
 
     return mapCsvToMachineErrorCodes().getAllErrorCodesWithCauses();
   }
 
-  @Bean
-  @Qualifier("machinesAndErrorCodes")
   public Map<String, List<String>> getMachinesWithErrorCodes() {
     return mapCsvToMachineErrorCodes().getAllErrorCodesForEachMachine();
   }
 
-  @Bean
   public Map<String, String> getErrorsWithDetails() {
     return mapCsvToMachineErrorCodes().getDetailsForAllErrorCodes();
   }

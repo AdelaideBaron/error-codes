@@ -53,5 +53,4 @@ public class ErrorCodeReaderTests {
     assertThat(testData.TEST_ERROR_CODES.getDetailsForAllErrorCodes())
         .isEqualTo(errorCodeReader.getErrorsWithDetails());
   }
-
 }
