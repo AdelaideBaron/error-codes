@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ErrorCodeController {
 
-  @Autowired private YamlReaderService yamlReaderService;
-  @Autowired private CauseHandler causeHandler;
-
   @Autowired Set<String> machinesFromCSV;
 
   @Autowired
@@ -53,7 +50,7 @@ public class ErrorCodeController {
     return codesAndCausesFromCsv.get(errorCode);
   }
 
-  @PostMapping("/select-machine") // TODO filter the errors codes by machine
+  @PostMapping("/select-machine")
   public String selectMachine(@RequestParam String machine, Model model) {
     log.info("Selected machine: " + machine);
 
