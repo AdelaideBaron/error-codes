@@ -38,13 +38,6 @@ public class ErrorCodeController {
     return "hello";
   }
 
-  private List<String> getErrorCodes() {
-    List<String> errorsCodes = new ArrayList<>();
-    for (Map.Entry<String, List<String>> entry : codesAndCausesFromCsv.entrySet()) {
-      errorsCodes.add(entry.getKey());
-    }
-    return errorsCodes;
-  }
 
   private List<String> getPossibleCauses(String errorCode) {
     return codesAndCausesFromCsv.get(errorCode);
