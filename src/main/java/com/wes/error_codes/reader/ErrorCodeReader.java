@@ -5,6 +5,8 @@ import com.opencsv.exceptions.CsvException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+
+import com.wes.error_codes.model.MachineErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -122,5 +124,61 @@ public class ErrorCodeReader { // obvs rename
     }
     log.info("ADDI " + errorToDetailsMap);
     return errorToDetailsMap;
+  }
+
+  public List<MachineErrorCode> mapCsvToMachineErrorCodes() {
+    List<MachineErrorCode> machineErrorCodes = new ArrayList<>();
+
+    try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
+      List<String[]> rows = reader.readAll();
+
+      String currentErrorCode = null;
+      String currentErrorDetails = null;
+      String currentMachine = null;
+      List<String> currentPossibleCauses = new ArrayList<>();
+
+      // Skip the header row (first row)
+      for (int i = 1; i < rows.size(); i++) {
+        String[] row = rows.get(i);
+
+        if (row.length < 4) {
+          continue; // Ignore rows with insufficient columns
+        }
+
+        String errorCode = row[0].trim();
+        String errorDetails = row[1].trim();
+        String possibleCause = row[2].trim();
+        String machine = row[3].trim();
+
+        // If the error code is populated, create a new MachineErrorCode instance
+        if (!errorCode.isEmpty()) {
+          // If there was a previous error code being built, add it to the list
+          if (currentErrorCode != null) {
+            machineErrorCodes.add(new MachineErrorCode(currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
+          }
+
+          // Start a new MachineErrorCode instance
+          currentErrorCode = errorCode;
+          currentErrorDetails = errorDetails;
+          currentMachine = machine;
+          currentPossibleCauses = new ArrayList<>();
+        }
+
+        // Add the possible cause to the current MachineErrorCode instance
+        if (!possibleCause.isEmpty()) {
+          currentPossibleCauses.add(possibleCause);
+        }
+      }
+
+      // Add the last MachineErrorCode instance if it exists
+      if (currentErrorCode != null) {
+        machineErrorCodes.add(new MachineErrorCode(currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
+      }
+
+    } catch (IOException | CsvException e) {
+      e.printStackTrace();
+    }
+
+    return machineErrorCodes;
   }
 }
