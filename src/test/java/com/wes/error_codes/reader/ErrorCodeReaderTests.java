@@ -20,11 +20,11 @@ public class ErrorCodeReaderTests {
 
   private TestData testData = new TestData();
 
-  @InjectMocks private ErrorCodeReader errorCodeReader;
+  @InjectMocks private ErrorCodeCSVReader errorCodeReader;
 
   @BeforeEach
   public void setup() {
-    errorCodeReader = new ErrorCodeReader();
+    errorCodeReader = new ErrorCodeCSVReader();
     ReflectionTestUtils.setField(
         errorCodeReader, "MACHINE_ERROR_CODES", testData.TEST_ERROR_CODES_FILE_PATH);
   }
@@ -53,4 +53,5 @@ public class ErrorCodeReaderTests {
     assertThat(testData.TEST_ERROR_CODES.getDetailsForAllErrorCodes())
         .isEqualTo(errorCodeReader.getErrorsWithDetails());
   }
+
 }

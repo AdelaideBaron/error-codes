@@ -2,12 +2,11 @@ package com.wes.error_codes.reader;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import com.wes.error_codes.model.ErrorCodes;
+import com.wes.error_codes.model.MachineErrorCode;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
-
-import com.wes.error_codes.model.ErrorCodes;
-import com.wes.error_codes.model.MachineErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @Slf4j
-public class ErrorCodeReader { // obvs rename
+public class ErrorCodeCSVReader { // obvs rename
 
   @Value("${errorCode.filePath}")
   private String MACHINE_ERROR_CODES; // = "src/main/resources/data/machine_error_codes.csv";
@@ -31,102 +30,35 @@ public class ErrorCodeReader { // obvs rename
 
   @Bean
   public Set<String> getMachinesFromCsv() {
-    Set<String> uniqueEntries = new HashSet<>();
-
-    try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
-      List<String[]> rows = reader.readAll();
-
-      // Skip the header row (first row)
-      for (int i = 1; i < rows.size(); i++) {
-        String[] row = rows.get(i);
-        if (row.length > 2 && row[3] != null && !row[3].isEmpty()) {
-          uniqueEntries.add(row[3]);
-        }
-      }
-
-    } catch (IOException | CsvException e) {
-      e.printStackTrace();
-    }
-
-    return uniqueEntries;
+    return mapCsvToMachineErrorCodes().getAllUniqueMachines();
   }
 
   @Bean
   @Qualifier("errorCodesAndCauses")
   public Map<String, List<String>> getErrorCodeAndCausesFromCsv() {
-    Map<String, List<String>> errorToCausesMap = new HashMap<>();
 
-    try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
-      List<String[]> rows = reader.readAll();
-
-      String currentError = null;
-      // Skip the first line (header)
-      for (int i = 1; i < rows.size(); i++) {
-        String[] row = rows.get(i);
-        if (row.length > 1) {
-          String error = row[0].trim();
-          String cause = row[2].trim();
-
-          if (!error.isEmpty()) {
-            currentError = error;
-            errorToCausesMap.putIfAbsent(currentError, new ArrayList<>());
-          }
-
-          if (currentError != null && !cause.isEmpty()) {
-            errorToCausesMap.get(currentError).add(cause);
-          }
-        }
-      }
-    } catch (IOException | CsvException e) {
-      e.printStackTrace();
-    }
-    return errorToCausesMap;
+    return mapCsvToMachineErrorCodes().getAllErrorCodesWithCauses();
   }
 
   @Bean
   @Qualifier("machinesAndErrorCodes")
   public Map<String, List<String>> getMachinesWithErrorCodes() {
-    Map<String, List<String>> machineToErrorsMap = new HashMap<>();
-
-    try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
-      List<String[]> rows = reader.readAll();
-
-      // Skip the header row (first row)
-      for (int i = 1; i < rows.size(); i++) {
-        String[] row = rows.get(i);
-        if (row.length > 3) {
-          String error = row[0].trim();
-          String machine = row[3].trim();
-
-          if (!error.isEmpty() && !machine.isEmpty()) {
-            machineToErrorsMap.putIfAbsent(machine, new ArrayList<>());
-            machineToErrorsMap.get(machine).add(error);
-          }
-        }
-      }
-
-    } catch (IOException | CsvException e) {
-      e.printStackTrace();
-    }
-
-    log.info("Machine to Errors Map: {}", machineToErrorsMap);
-    return machineToErrorsMap;
+    return mapCsvToMachineErrorCodes().getAllErrorCodesForEachMachine();
   }
 
   @Bean
   public Map<String, String> getErrorsWithDetails() {
-return mapCsvToMachineErrorCodes().getDetailsForAllErrorCodes();
+    return mapCsvToMachineErrorCodes().getDetailsForAllErrorCodes();
   }
 
-//  @Bean
-  public ErrorCodes mapCsvToMachineErrorCodes() {
+  private ErrorCodes mapCsvToMachineErrorCodes() {
     List<MachineErrorCode> machineErrorCodes = new ArrayList<>();
 
     try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
       List<String[]> rows = reader.readAll();
 
       if (rows.isEmpty()) {
-          return new ErrorCodes(machineErrorCodes);
+        return new ErrorCodes(machineErrorCodes);
       }
 
       String[] headers = rows.get(0);
@@ -157,7 +89,9 @@ return mapCsvToMachineErrorCodes().getDetailsForAllErrorCodes();
         if (!errorCode.isEmpty()) {
           // If there was a previous error code being built, add it to the list
           if (currentErrorCode != null) {
-            machineErrorCodes.add(new MachineErrorCode(currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
+            machineErrorCodes.add(
+                new MachineErrorCode(
+                    currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
           }
 
           // Start a new MachineErrorCode instance
@@ -175,14 +109,17 @@ return mapCsvToMachineErrorCodes().getDetailsForAllErrorCodes();
 
       // Add the last MachineErrorCode instance if it exists
       if (currentErrorCode != null) {
-        machineErrorCodes.add(new MachineErrorCode(currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
+        machineErrorCodes.add(
+            new MachineErrorCode(
+                currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
       }
 
     } catch (IOException | CsvException e) {
       e.printStackTrace();
     }
 
-    return new ErrorCodes(machineErrorCodes);  }
+    return new ErrorCodes(machineErrorCodes);
+  }
 
   private int findColumnIndex(String[] headers, String columnName) {
     for (int i = 0; i < headers.length; i++) {
