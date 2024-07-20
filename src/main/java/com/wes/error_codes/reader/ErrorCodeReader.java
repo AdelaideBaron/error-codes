@@ -71,7 +71,7 @@ public class ErrorCodeReader { // obvs rename
 
   @Bean
   @Qualifier("machinesAndErrorCodes")
-  public Map<String, List<String>> mapErrorCodesToMachines() {
+  public Map<String, List<String>> getMachinesWithErrorCodes() {
     Map<String, List<String>> machineToErrorsMap = new HashMap<>();
 
     try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
@@ -100,7 +100,7 @@ public class ErrorCodeReader { // obvs rename
   }
 
   @Bean
-  public Map<String, String> getErrorToDetailsMap() {
+  public Map<String, String> getErrorsWithDetails() {
     Map<String, String> errorToDetailsMap = new HashMap<>();
 
     try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
