@@ -1,43 +1,103 @@
-<!-- src/main/resources/templates/selected-machine.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selected Machine</title>
     <style>
-        #errorList {
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p, span, label {
+            color: #666;
+            font-size: 16px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        ul {
             list-style-type: none;
             padding: 0;
         }
 
         .errorItem {
-            margin: 5px;
+            margin: 5px 0;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            display: block;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            color: #007bff;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-<h1>Machine Details</h1>
-<p>Selected machine: <span th:text="${selectedMachine}"></span></p>
+<div class="container">
+    <h1>Machine Details</h1>
+    <p>Selected machine: <span th:text="${selectedMachine}"></span></p>
 
-<!-- Add a search box for error codes -->
-<label for="searchBox">Search Error Codes:</label>
-<input type="text" id="searchBox" oninput="searchErrors()">
+    <!-- Add a search box for error codes -->
+    <label for="searchBox">Search Error Codes:</label>
+    <input type="text" id="searchBox" oninput="searchErrors()">
 
-<!-- Display a list of errors for the selected machine -->
-<ul id="errorList">
-    <li th:each="error : ${errors}" class="errorItem">
-        <a th:href="@{/select-error(machine=${selectedMachine},error=${error})}" th:text="${error}"></a>
-    </li>
-</ul>
+    <!-- Display a list of errors for the selected machine -->
+    <ul id="errorList">
+        <li th:each="error : ${errors}" class="errorItem">
+            <a th:href="@{/select-error(machine=${selectedMachine},error=${error})}" th:text="${error}"></a>
+        </li>
+    </ul>
 
-<!-- Link to navigate back to the previous page -->
-<p><a th:href="@{~/}">Back to Machine Selection</a></p>
+    <!-- Link to navigate back to the previous page -->
+    <p><a class="back-link" th:href="@{~/}">Back to Machine Selection</a></p>
+</div>
 
 <script>
-    const errorList = document.getElementById("errorList");
     const errorItems = document.getElementsByClassName("errorItem");
 
     function searchErrors() {
@@ -53,6 +113,5 @@
         });
     }
 </script>
-
 </body>
 </html>
