@@ -61,7 +61,7 @@ public class ErrorCodeController {
         return codesAndCausesFromCsv.get(errorCode);
     }
 
-    @PostMapping("/select-machine")     // TODO filter the errors codes by machine
+    @PostMapping("/select-machine")
     public String selectMachine(@RequestParam String machine, Model model) {
         log.info("Selected machine: " + machine);
 
