@@ -141,10 +141,9 @@ public class ErrorCodeReader { // obvs rename
       List<String[]> rows = reader.readAll();
 
       if (rows.isEmpty()) {
-        return machineErrorCodes; // Return empty list if no rows are present
+        return machineErrorCodes;
       }
 
-      // Read headers
       String[] headers = rows.get(0);
       int errorCodeIndex = findColumnIndex(headers, ERROR_CODE_COL_HEAD);
       int errorDetailsIndex = findColumnIndex(headers, ERROR_DETAILS_COL_HEAD);
