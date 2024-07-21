@@ -39,3 +39,8 @@ If using intelliJ, it is a simple SpringBoot app with no external dependencies -
 - Setup authtoken, you'll need an account 
 - https://dashboard.ngrok.com/get-started/your-authtoken 
 - Configure this via command line as instructed
+
+## Testing 
+- There are unit (JUnit) tests in the src/test directory
+- Run these using mvn test, or right click on the src/test/java package -> run all tests 
+- ⏳front end tests to be done - using selenium or cypress, and likely cucumber. This will live in this project, but in a separate testing module
