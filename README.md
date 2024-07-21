@@ -13,12 +13,14 @@ This was created for a specific engineer, however real data is not held in this 
 
 ## Running the app
 If using intelliJ, it is a simple SpringBoot app with no external dependencies - simply run the main application class `src/main/java/com/wes/error_codes/ErrorCodesApplication.java`
-### From the command line using maven
+### From the command line using maven, and deploying via public address
 1. Navigate to the root directory, e.g. `cd path/error-codes`
 2. Run the app using mvn: `mvn compile` followed by `mvn exec:java` - this should be port 8080, if it is not, change the ngrok port below to match the port the app is running on
 3. Open a new cmd window (keeping the other open, as that's where the app is running) and run `ngrok http 8080`
 4. This ^ will open a new window, showing the url to access, e.g. `http://...ngrok-free.app`
 5. You can access the app from this endpoint now, on any device (off the host network too)
+
+_This was designed with particular engineer requirements, and needs to be ran from the engineer's device_
 
 ## Updating the errors CSV 
 - CSV to edit: `src/main/resources/data/machine_error_codes.csv`
