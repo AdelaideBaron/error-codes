@@ -9,7 +9,7 @@ This was created for a specific engineer, however real data is not held in this 
 ## Technical requirements
 - Java 21
 - Maven
-- _If wanting to expose beyond local device_, ngrok (see [setting up ngrok](#Setting up ngrok))
+- _If wanting to expose beyond local device_, ngrok (see **_Setting up ngrok_** below)
 
 ## Running the app
 If using intelliJ, it is a simple SpringBoot app with no external dependencies - simply run the main application class `src/main/java/com/wes/error_codes/ErrorCodesApplication.java`
