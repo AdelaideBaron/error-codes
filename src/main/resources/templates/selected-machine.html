@@ -16,11 +16,13 @@
     <input type="text" id="searchBox" oninput="searchErrors()">
 
     <!-- Display a list of errors for the selected machine -->
+    <h2>Error List</h2>
     <ul id="errorList">
         <li th:each="error : ${errors}" class="errorItem">
             <a th:href="@{/select-error(machine=${selectedMachine},error=${error})}" th:text="${error}"></a>
         </li>
     </ul>
+    <p th:if="${#lists.isEmpty(errors)}">No errors found for this machine.</p>
 
     <!-- Link to navigate back to the previous page -->
     <p><a class="back-link" th:href="@{~/}">Back to Machine Selection</a></p>

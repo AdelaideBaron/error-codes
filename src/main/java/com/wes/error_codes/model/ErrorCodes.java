@@ -27,6 +27,26 @@ public class ErrorCodes {
     return errorToCausesMap;
   }
 
+  public Map<String, List<Map.Entry<String, String>>> getAllErrorCodesWithCausesAndActions() {
+    Map<String, List<Map.Entry<String, String>>> errorToCausesAndActionsMap = new HashMap<>();
+
+    for (MachineErrorCode machineErrorCode : machineErrorCodes) {
+      List<String> causes = machineErrorCode.getPossibleCauses();
+      List<String> actions = machineErrorCode.getCorrectiveActions();
+
+      List<Map.Entry<String, String>> causeActionPairs = new ArrayList<>();
+      for (int i = 0; i < causes.size(); i++) {
+        String cause = causes.get(i);
+        String action = (i < actions.size()) ? actions.get(i) : "";
+        causeActionPairs.add(new AbstractMap.SimpleEntry<>(cause, action));
+      }
+
+      errorToCausesAndActionsMap.put(machineErrorCode.getErrorCode(), causeActionPairs);
+    }
+
+    return errorToCausesAndActionsMap;
+  }
+
   public Map<String, String> getDetailsForAllErrorCodes() {
     Map<String, String> errorToDetailsMap = new HashMap<>();
 
