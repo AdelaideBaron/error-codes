@@ -11,4 +11,5 @@ public class MachineErrorCode {
   private final String errorDetails;
   private final List<String> possibleCauses;
   private final String machine;
+  private final List<String> correctiveActions;
 }
