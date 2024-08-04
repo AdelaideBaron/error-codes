@@ -53,13 +53,13 @@ public class ErrorCodeCSVReader {
   }
 
   private ErrorCodes mapCsvToMachineErrorCodes() {
-    List<MachineErrorCode> machineErrorCodes = new ArrayList<>();
+    Map<String, MachineErrorCode> errorCodeMap = new HashMap<>();
 
     try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
       List<String[]> rows = reader.readAll();
 
       if (rows.isEmpty()) {
-        return new ErrorCodes(machineErrorCodes);
+        return new ErrorCodes(new ArrayList<>(errorCodeMap.values()));
       }
 
       String[] headers = rows.get(0);
@@ -69,12 +69,7 @@ public class ErrorCodeCSVReader {
       int machineIndex = findColumnIndex(headers, MACHINE_COL_HEAD);
       int correctiveActionIndex = findColumnIndex(headers, CORRECTIVE_ACTION_COL_HEAD);
 
-      String currentErrorCode = null;
-      String currentErrorDetails = null;
-      String currentMachine = null;
-      List<String> currentPossibleCauses = new ArrayList<>();
-      List<String> currentCorrectiveActions = new ArrayList<>();
-
+      String previousErrorCode = "";
       for (int i = 1; i < rows.size(); i++) {
         String[] row = rows.get(i);
 
@@ -88,45 +83,40 @@ public class ErrorCodeCSVReader {
         String machine = getValueAtIndex(row, machineIndex);
         String correctiveAction = getValueAtIndex(row, correctiveActionIndex);
 
-        if (!errorCode.isEmpty()) {
-          if (currentErrorCode != null) {
-            machineErrorCodes.add(
-                    new MachineErrorCode(
-                            currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine, currentCorrectiveActions
-                    )
-            );
-          }
-
-          currentErrorCode = errorCode;
-          currentErrorDetails = errorDetails;
-          currentMachine = machine;
-          currentPossibleCauses = new ArrayList<>();
-          currentCorrectiveActions = new ArrayList<>();
+        if (errorCode.isEmpty()) {
+          continue;
         }
 
-        if (!possibleCause.isEmpty()) {
-          currentPossibleCauses.add(possibleCause);
+        MachineErrorCode machineErrorCode;
+        if (errorCode.equals(previousErrorCode)) {
+          machineErrorCode = errorCodeMap.get(errorCode);
+          machineErrorCode. appendErrorDetails(errorDetails);
+        } else {
+          machineErrorCode = new MachineErrorCode(
+                  errorCode, new StringBuilder(errorDetails), new ArrayList<>(), machine, new ArrayList<>()
+          );
+          errorCodeMap.put(errorCode, machineErrorCode);
+          previousErrorCode = errorCode;
         }
 
-        if (!correctiveAction.isEmpty()) {
-          currentCorrectiveActions.add(correctiveAction);
+        if (!possibleCause.isEmpty() && !machineErrorCode.getPossibleCauses().contains(possibleCause)) {
+          machineErrorCode.getPossibleCauses().add(possibleCause);
         }
-      }
 
-      if (currentErrorCode != null) {
-        machineErrorCodes.add(
-                new MachineErrorCode(
-                        currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine, currentCorrectiveActions
-                )
-        );
+        if (!correctiveAction.isEmpty() && !machineErrorCode.getCorrectiveActions().contains(correctiveAction)) {
+          machineErrorCode.getCorrectiveActions().add(correctiveAction);
+        }
       }
 
     } catch (IOException | CsvException e) {
       e.printStackTrace();
     }
 
-    return new ErrorCodes(machineErrorCodes);
+    return new ErrorCodes(new ArrayList<>(errorCodeMap.values()));
   }
+
+
+
 
   private int findColumnIndex(String[] headers, String columnName) {
     for (int i = 0; i < headers.length; i++) {

@@ -17,15 +17,15 @@ public class ErrorCodes {
     return uniqueEntries;
   }
 
-  public Map<String, List<String>> getAllErrorCodesWithCauses() {
-    Map<String, List<String>> errorToCausesMap = new HashMap<>();
-
-    for (MachineErrorCode machineErrorCode : machineErrorCodes) {
-      errorToCausesMap.put(machineErrorCode.getErrorCode(), machineErrorCode.getPossibleCauses());
-    }
-
-    return errorToCausesMap;
-  }
+//  public Map<String, List<String>> getAllErrorCodesWithCauses() {
+//    Map<String, List<String>> errorToCausesMap = new HashMap<>();
+//
+//    for (MachineErrorCode machineErrorCode : machineErrorCodes) {
+//      errorToCausesMap.put(machineErrorCode.getErrorCode(), machineErrorCode.getPossibleCauses());
+//    }
+//
+//    return errorToCausesMap;
+//  }
 
   public Map<String, List<Map.Entry<String, String>>> getAllErrorCodesWithCausesAndActions() {
     Map<String, List<Map.Entry<String, String>>> errorToCausesAndActionsMap = new HashMap<>();
@@ -51,7 +51,14 @@ public class ErrorCodes {
     Map<String, String> errorToDetailsMap = new HashMap<>();
 
     for (MachineErrorCode machineErrorCode : machineErrorCodes) {
-      errorToDetailsMap.put(machineErrorCode.getErrorCode(), machineErrorCode.getErrorDetails());
+      // check if the error code already exists, if so - append to
+      String errorCode = machineErrorCode.getErrorCode();
+
+      if(errorToDetailsMap.containsKey(errorCode)){
+        String currentDetails = errorToDetailsMap.get(errorCode);
+        errorToDetailsMap.replace(errorCode, currentDetails + ", " + machineErrorCode.getErrorDetails());
+      }
+      errorToDetailsMap.put(machineErrorCode.getErrorCode(), String.valueOf(machineErrorCode.getErrorDetails()));
     }
 
     return errorToDetailsMap;
