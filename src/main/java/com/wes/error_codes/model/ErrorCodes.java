@@ -17,21 +17,48 @@ public class ErrorCodes {
     return uniqueEntries;
   }
 
-  public Map<String, List<String>> getAllErrorCodesWithCauses() {
-    Map<String, List<String>> errorToCausesMap = new HashMap<>();
+//  public Map<String, List<String>> getAllErrorCodesWithCauses() {
+//    Map<String, List<String>> errorToCausesMap = new HashMap<>();
+//
+//    for (MachineErrorCode machineErrorCode : machineErrorCodes) {
+//      errorToCausesMap.put(machineErrorCode.getErrorCode(), machineErrorCode.getPossibleCauses());
+//    }
+//
+//    return errorToCausesMap;
+//  }
+
+  public Map<String, List<Map.Entry<String, String>>> getAllErrorCodesWithCausesAndActions() {
+    Map<String, List<Map.Entry<String, String>>> errorToCausesAndActionsMap = new HashMap<>();
 
     for (MachineErrorCode machineErrorCode : machineErrorCodes) {
-      errorToCausesMap.put(machineErrorCode.getErrorCode(), machineErrorCode.getPossibleCauses());
+      List<String> causes = machineErrorCode.getPossibleCauses();
+      List<String> actions = machineErrorCode.getCorrectiveActions();
+
+      List<Map.Entry<String, String>> causeActionPairs = new ArrayList<>();
+      for (int i = 0; i < causes.size(); i++) {
+        String cause = causes.get(i);
+        String action = (i < actions.size()) ? actions.get(i) : "";
+        causeActionPairs.add(new AbstractMap.SimpleEntry<>(cause, action));
+      }
+
+      errorToCausesAndActionsMap.put(machineErrorCode.getErrorCode(), causeActionPairs);
     }
 
-    return errorToCausesMap;
+    return errorToCausesAndActionsMap;
   }
 
   public Map<String, String> getDetailsForAllErrorCodes() {
     Map<String, String> errorToDetailsMap = new HashMap<>();
 
     for (MachineErrorCode machineErrorCode : machineErrorCodes) {
-      errorToDetailsMap.put(machineErrorCode.getErrorCode(), machineErrorCode.getErrorDetails());
+      // check if the error code already exists, if so - append to
+      String errorCode = machineErrorCode.getErrorCode();
+
+      if(errorToDetailsMap.containsKey(errorCode)){
+        String currentDetails = errorToDetailsMap.get(errorCode);
+        errorToDetailsMap.replace(errorCode, currentDetails + ", " + machineErrorCode.getErrorDetails());
+      }
+      errorToDetailsMap.put(machineErrorCode.getErrorCode(), String.valueOf(machineErrorCode.getErrorDetails()));
     }
 
     return errorToDetailsMap;

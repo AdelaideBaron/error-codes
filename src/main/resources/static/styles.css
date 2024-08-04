@@ -7,8 +7,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    min-height: 100vh; /* Use min-height instead of height */
     background-color: #f0f0f0;
+    overflow: auto; /* Allow scrolling if content exceeds viewport */
 }
 
 .container {
@@ -18,6 +19,8 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 600px;
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+    max-height: 90vh; /* Limit height to ensure it fits within viewport */
 }
 
 h1, h2 {

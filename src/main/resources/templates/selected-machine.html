@@ -11,19 +11,21 @@
     <h1>Machine Details</h1>
     <p>Selected machine: <span th:text="${selectedMachine}"></span></p>
 
-    <!-- Add a search box for error codes -->
     <label for="searchBox">Search Error Codes:</label>
     <input type="text" id="searchBox" oninput="searchErrors()">
 
-    <!-- Display a list of errors for the selected machine -->
+    <h2>Error List</h2>
     <ul id="errorList">
         <li th:each="error : ${errors}" class="errorItem">
             <a th:href="@{/select-error(machine=${selectedMachine},error=${error})}" th:text="${error}"></a>
         </li>
     </ul>
+    <p th:if="${#lists.isEmpty(errors)}">No errors found for this machine.</p>
 
-    <!-- Link to navigate back to the previous page -->
-    <p><a class="back-link" th:href="@{~/}">Back to Machine Selection</a></p>
+    <a class="back-link" th:href="@{~/}">
+        <button type="button">Back to Machine Selection</button>
+    </a>
+
 </div>
 
 <script>

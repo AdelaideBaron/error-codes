@@ -16,10 +16,14 @@
     <p th:text="${errorDetails}"></p>
 
     <!-- Display causes and potential solutions for the selected error -->
-    <h2>Causes & Potential Solutions</h2>
+    <h2>Causes and Corrective Actions</h2>
     <ul>
-        <li th:each="cause : ${causeDetails}">
-            <p th:text="${cause}"></p>
+        <li th:each="causeActionPair : ${causeDetails}">
+            <p>
+                <strong>Cause:</strong> <span th:text="${causeActionPair.key}"></span>
+                <br/>
+                <strong>Corrective Action:</strong> <span th:text="${causeActionPair.value}"></span>
+            </p>
         </li>
     </ul>
 

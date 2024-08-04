@@ -2,6 +2,8 @@ package com.wes.error_codes;
 
 import com.wes.error_codes.reader.ErrorCodeCSVReader;
 import java.util.List;
+import java.util.Map;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +32,7 @@ public class ErrorCodeController {
     log.info("Viewing selected machine: {}", machine);
 
     List<String> errors = errorCodeCSVReader.getMachinesWithErrorCodes().get(machine);
+//    log.info("Errors for machine {}: {}", machine, errors);
 
     model.addAttribute("selectedMachine", machine);
     model.addAttribute("errors", errors);
@@ -37,21 +40,24 @@ public class ErrorCodeController {
     return "selected-machine";
   }
 
+
+
   @GetMapping("/select-error")
   public String selectError(@RequestParam String machine, @RequestParam String error, Model model) {
     log.info("Viewing error {} for machine {}", error, machine);
     model.addAttribute("selectedMachine", machine);
     model.addAttribute("selectedError", error);
 
-    List<String> causes = getPossibleCauses(error);
+    Map<String, String> details = errorCodeCSVReader.getErrorsWithDetails();
+    model.addAttribute("errorDetails", details.get(error));
 
-    model.addAttribute("errorDetails", errorCodeCSVReader.getErrorsWithDetails().get(error));
-    model.addAttribute("causeDetails", causes);
+    List<Map.Entry<String, String>> causesWithActions = getPossibleCausesAndActions(error);
+    model.addAttribute("causeDetails", causesWithActions);
 
     return "selected-error";
   }
 
-  private List<String> getPossibleCauses(String errorCode) {
-    return errorCodeCSVReader.getErrorCodeAndCausesFromCsv().get(errorCode);
+  private List<Map.Entry<String, String>> getPossibleCausesAndActions(String errorCode) {
+    return errorCodeCSVReader.getErrorCodeAndCausesAndActionsFromCsv().get(errorCode);
   }
 }
