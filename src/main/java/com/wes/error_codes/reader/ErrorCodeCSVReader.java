@@ -43,6 +43,92 @@ public class ErrorCodeCSVReader {
     return mapCsvToMachineErrorCodes().getDetailsForAllErrorCodes();
   }
 
+//  private ErrorCodes mapCsvToMachineErrorCodes() {
+//    List<MachineErrorCode> machineErrorCodes = new ArrayList<>();
+//
+//    try (CSVReader reader = new CSVReader(new FileReader(MACHINE_ERROR_CODES))) {
+//      List<String[]> rows = reader.readAll();
+//
+//      if (rows.isEmpty()) {
+//        return new ErrorCodes(machineErrorCodes);
+//      }
+//
+//      String[] headers = rows.get(0);
+//      int errorCodeIndex = findColumnIndex(headers, ERROR_CODE_COL_HEAD);
+//      int errorDetailsIndex = findColumnIndex(headers, ERROR_DETAILS_COL_HEAD);
+//      int possibleCausesIndex = findColumnIndex(headers, POSSIBLE_CAUSES_COL_HEAD);
+//      int machineIndex = findColumnIndex(headers, MACHINE_COL_HEAD);
+//
+//      String currentErrorCode = null;
+//      String currentErrorDetails = null;
+//      String currentMachine = null;
+//      List<String> currentPossibleCauses = new ArrayList<>();
+//
+//      // Process rows
+//      for (int i = 1; i < rows.size(); i++) {
+//        String[] row = rows.get(i);
+//
+//        if (row.length < headers.length) {
+//          continue; // Ignore rows with insufficient columns
+//        }
+//
+//        String errorCode = getValueAtIndex(row, errorCodeIndex);
+//        String errorDetails = getValueAtIndex(row, errorDetailsIndex);
+//        String possibleCause = getValueAtIndex(row, possibleCausesIndex);
+//        String machine = getValueAtIndex(row, machineIndex);
+//
+//        // If the error code is populated, create a new MachineErrorCode instance
+//        if (!errorCode.isEmpty()) {
+//          // If there was a previous error code being built, add it to the list
+//          if (currentErrorCode != null) {
+//            machineErrorCodes.add(
+//                new MachineErrorCode(
+//                    currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
+//          }
+//
+//          // Start a new MachineErrorCode instance
+//          currentErrorCode = errorCode;
+//          currentErrorDetails = errorDetails;
+//          currentMachine = machine;
+//          currentPossibleCauses = new ArrayList<>();
+//        }
+//
+//        // Add the possible cause to the current MachineErrorCode instance
+//        if (!possibleCause.isEmpty()) {
+//          currentPossibleCauses.add(possibleCause);
+//        }
+//      }
+//
+//      // Add the last MachineErrorCode instance if it exists
+//      if (currentErrorCode != null) {
+//        machineErrorCodes.add(
+//            new MachineErrorCode(
+//                currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
+//      }
+//
+//    } catch (IOException | CsvException e) {
+//      e.printStackTrace();
+//    }
+//
+//    return new ErrorCodes(machineErrorCodes);
+//  }
+
+  private int findColumnIndex(String[] headers, String columnName) {
+    for (int i = 0; i < headers.length; i++) {
+      if (columnName.equalsIgnoreCase(headers[i].trim())) {
+        return i;
+      }
+    }
+    throw new IllegalArgumentException("Column not found: " + columnName);
+  }
+
+//  private String getValueAtIndex(String[] row, int index) {
+//    if (index >= 0 && index < row.length) {
+//      return row[index].trim();
+//    }
+//    return "";
+//  }
+
   private ErrorCodes mapCsvToMachineErrorCodes() {
     List<MachineErrorCode> machineErrorCodes = new ArrayList<>();
 
@@ -68,8 +154,9 @@ public class ErrorCodeCSVReader {
       for (int i = 1; i < rows.size(); i++) {
         String[] row = rows.get(i);
 
-        if (row.length < headers.length) {
-          continue; // Ignore rows with insufficient columns
+        // Handle rows with insufficient columns or empty rows
+        if (row.length < headers.length || Arrays.stream(row).allMatch(String::isEmpty)) {
+          continue;
         }
 
         String errorCode = getValueAtIndex(row, errorCodeIndex);
@@ -82,8 +169,8 @@ public class ErrorCodeCSVReader {
           // If there was a previous error code being built, add it to the list
           if (currentErrorCode != null) {
             machineErrorCodes.add(
-                new MachineErrorCode(
-                    currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
+                    new MachineErrorCode(
+                            currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
           }
 
           // Start a new MachineErrorCode instance
@@ -102,8 +189,8 @@ public class ErrorCodeCSVReader {
       // Add the last MachineErrorCode instance if it exists
       if (currentErrorCode != null) {
         machineErrorCodes.add(
-            new MachineErrorCode(
-                currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
+                new MachineErrorCode(
+                        currentErrorCode, currentErrorDetails, currentPossibleCauses, currentMachine));
       }
 
     } catch (IOException | CsvException e) {
@@ -113,19 +200,11 @@ public class ErrorCodeCSVReader {
     return new ErrorCodes(machineErrorCodes);
   }
 
-  private int findColumnIndex(String[] headers, String columnName) {
-    for (int i = 0; i < headers.length; i++) {
-      if (columnName.equalsIgnoreCase(headers[i].trim())) {
-        return i;
-      }
-    }
-    throw new IllegalArgumentException("Column not found: " + columnName);
-  }
-
   private String getValueAtIndex(String[] row, int index) {
     if (index >= 0 && index < row.length) {
       return row[index].trim();
     }
     return "";
   }
+
 }
